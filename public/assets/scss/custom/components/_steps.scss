@@ -1,0 +1,184 @@
+//
+// horizontal-steps.scss
+//
+
+// Horizontal steps
+.horizontal-steps {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 0.2em;
+    background-color: $gray-200;
+  }
+  .process-line {
+    display: block;
+    position: absolute;
+    width: 50%;
+    height: 0.2em;
+    background-color: $primary;
+  }
+  .horizontal-steps-content {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    .step-item {
+      display: block;
+      position: relative;
+      bottom: calc(100% + 1em);
+      height: 8px;
+      width: 8px;
+      margin: 0 2em;
+      box-sizing: content-box;
+      color: $primary;
+      background-color: currentColor;
+      border: 0.25em solid $body-bg;
+      border-radius: 50%;
+      z-index: 5;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+        color: $success;
+      }
+      span {
+        position: absolute;
+        top: calc(100% + 1em);
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        color: $gray-500;
+      }
+      &.current {
+        &:before {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 47.5%;
+          left: 51%;
+          padding: 1em;
+          background-color: currentColor;
+          border-radius: 50%;
+          opacity: 0;
+          z-index: -1;
+          animation-name: animation-steps-current;
+          animation-duration: 2s;
+          animation-iteration-count: infinite;
+          animation-timing-function: ease-out;
+        }
+        span {
+          color: $primary;
+        }
+      }
+    }
+  }
+}
+
+@keyframes animation-steps-current {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .horizontal-steps {
+    .horizontal-steps-content {
+      .step-item {
+        span {
+          white-space: inherit;
+        }
+      }
+    }
+  }
+}
+
+// RYAN ADDED
+.vertical-steps {
+  position: relative;
+  padding-left: 45px;
+  list-style: none;
+  &:before {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 10px;
+    height: 100%;
+    border-left: 2px solid #ccc;
+  }
+  .step-item {
+    position: relative;
+    counter-increment: list;
+    &:not(:last-child) {
+      padding-bottom: 20px;
+    }
+    &::before {
+      display: inline-block;
+      content: "";
+      position: absolute;
+      left: -30px;
+      height: 100%;
+      width: 10px;
+    }
+    &:after {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: -37px;
+      //   width: 12px;
+      //   height: 12px;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      background-color: #fff;
+    }
+  }
+  .is-done:before {
+    border-left: 2px solid $success;
+  }
+  .is-done:after {
+    content: "✔";
+    font-size: 0.7em;
+    color: #fff;
+    text-align: center;
+    border: 2px solid $success;
+    background-color: $success;
+  }
+  .current:before {
+    border-left: 2px solid $success;
+  }
+  .current:after {
+    content: "";
+    left: -1.8rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #fff;
+    text-align: center;
+    border: 2px solid $success;
+    background-color: $success;
+    animation-name: animation-steps-current;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-out;
+  }
+}

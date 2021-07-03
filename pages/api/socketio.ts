@@ -24,6 +24,12 @@ export default async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     const httpServer: HttpServer = res.socket.server as any;
     const io = new ServerIO(httpServer, {
       path: "/api/socketio",
+      cors: {
+        origin: [
+          "http://localhost:8080",
+          "https://cp-three.vercel.app"
+        ]
+      }
     });
     // append SocketIO server to Next.js socket server response
     res.socket.server.io = io;

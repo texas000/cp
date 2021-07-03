@@ -1,11 +1,11 @@
 import React from "react";
 import { Row, Col } from "reactstrap";
 
-const Footer = () => {
+const Footer = (props) => {
   const currentYear = new Date().getFullYear();
   return (
     <React.Fragment>
-      <footer className="footer">
+      <footer className="footer" style={props.windowDimensions.width<1030 ? {left: '0px'} : {}}>
         <div className="container-fluid">
           <Row>
             <Col md={6}>{currentYear} © James Worldwide Inc</Col>

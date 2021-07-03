@@ -4,12 +4,7 @@ import React from 'react'
 
 export default function Sidebar (props) {
   var isLight = false;
-  // if item is admin
-  // display only admin user
-  // admin (ture, false)
-  // true (true, false)
-  // 
-  // display flase default
+  
   const MenuItem = ({ item }) => {
     return (
       <li className={`side-nav-item ${item.admin && 'd-none'}`}>
@@ -103,7 +98,7 @@ export default function Sidebar (props) {
   }
 
   return (
-    <div className="left-side-menu">
+    <div className={`${(props.windowDimensions.width<1030 && props.windowDimensions.width>768) ? 'left-side-menu-condensed':'left-side-menu'}`}>
       <Link href="/dashboard">
         <a className="logo text-center logo-light">
           <span className="logo-lg">

@@ -131,44 +131,44 @@
 }
 
 // Enlarge menu
-body[data-leftbar-compact-mode="condensed"] {
-    min-height: 1600px;
+// body[data-leftbar-compact-mode="condensed"] {
+.left-side-menu-condensed {
+    // min-height: 1600px;
+    position: absolute;
+    padding-top: 0;
+    width: 70px;
+    z-index: 5;
+    padding-top: $topbar-height;
 
-    .wrapper {
-        // Side menu
-        .left-side-menu {
-            position: absolute;
-            padding-top: 0;
-            width: 70px;
-            z-index: 5;
-            padding-top: $topbar-height;
-    
-            .simplebar-mask,
-            .simplebar-content-wrapper {
-                overflow: visible !important;
-            }
+    .simplebar-mask,
+    .simplebar-content-wrapper {
+        overflow: visible !important;
+    }
 
-            .simplebar-scrollbar {
-                display: none !important;
-            }
+    .simplebar-scrollbar {
+        display: none !important;
+    }
 
-            .simplebar-offset {
-                bottom: 0 !important;
-            }
+    .simplebar-offset {
+        bottom: 0 !important;
+    }
 
-            .logo {
-                width: 70px;
-                z-index: 1;
-                background: $bg-leftbar;
-            }
-	    .metismenu {
-                .has-arrow {
-                    &:after {
-                        border-width: 0;
-                    }
-                }
+    .logo {
+        width: 70px;
+        z-index: 1;
+        background: $bg-leftbar;
+    }
+.metismenu {
+        .has-arrow {
+            &:after {
+                border-width: 0;
             }
         }
+    }
+        // Side menu
+        // .left-side-menu {
+           
+        // }
     
         // Help Box
         .help-box {
@@ -176,16 +176,17 @@ body[data-leftbar-compact-mode="condensed"] {
         }
     
         // Content Page
-        .content-page {
-            margin-left: 70px;
-        }
+        // .content-page {
+        //     margin-left: 70px;
+        // }
     
         //Navbar & Footer
-        .navbar-custom,
-        .footer {
+        // .footer
+        .navbar-custom
+         {
             left: 70px;
         }
-    }
+    
 
     // Sidebar Menu
     .side-nav {

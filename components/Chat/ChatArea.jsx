@@ -1,3 +1,4 @@
+import { createRef } from "react";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -27,10 +28,16 @@ const Loader = () => (
 );
 
 export default function ChatArea(props) {
+  const messageEnd = createRef(null)
+  const scrollToBottom = () => {
+    messageEnd.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     setIsLoaded(true);
-  }, []);
+    scrollToBottom()
+  }, [props]);
   return (
     <Card>
       <CardBody className="position-relative">
@@ -39,41 +46,7 @@ export default function ChatArea(props) {
         ) : (
           <SimpleBar style={{ maxHeight: "556px", width: "100%" }}>
             <ul className="conversation-list">
-              {props.conversation &&
-                props.conversation.map((ga, i) => (
-                  <li className="clearfix" key={i}>
-                    <div className="chat-avatar">
-                      <img
-                        src="/assets/images/users/avatar-2.jpg"
-                        className="rounded"
-                        alt=""
-                      />
-                      <i>10:10</i>
-                    </div>
-
-                    <div className="conversation-text">
-                      <div className="ctext-wrap">
-                        <i>{ga.user}</i>
-                        <p>{ga.msg}</p>
-                      </div>
-                    </div>
-
-                    <UncontrolledDropdown className="conversation-actions">
-                      <DropdownToggle
-                        tag="button"
-                        className="btn btn-sm btn-link no-arrow p-0"
-                      >
-                        <i className="uil uil-ellipsis-v"></i>
-                      </DropdownToggle>
-
-                      <DropdownMenu>
-                        <DropdownItem>Copy Message</DropdownItem>
-                        <DropdownItem>Edit</DropdownItem>
-                        <DropdownItem>Delete</DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  </li>
-                ))}
+              
               <li className="clearfix">
                 <div className="chat-avatar">
                   <img
@@ -150,6 +123,42 @@ export default function ChatArea(props) {
                   </Card>
                 </div>
               </li>
+              {props.conversation &&
+                props.conversation.map((ga, i) => (
+                  <li className="clearfix" key={i}>
+                    <div className="chat-avatar">
+                      <img
+                        src={ga.photo||"/assets/images/users/avatar-2.jpg"}
+                        className="rounded"
+                        alt=""
+                      />
+                      <i>10:10</i>
+                    </div>
+
+                    <div className="conversation-text">
+                      <div className="ctext-wrap">
+                        <i>{ga.user}</i>
+                        <p>{ga.msg}</p>
+                      </div>
+                    </div>
+
+                    <UncontrolledDropdown className="conversation-actions">
+                      <DropdownToggle
+                        tag="button"
+                        className="btn btn-sm btn-link no-arrow p-0"
+                      >
+                        <i className="uil uil-ellipsis-v"></i>
+                      </DropdownToggle>
+
+                      <DropdownMenu>
+                        <DropdownItem>Copy Message</DropdownItem>
+                        <DropdownItem>Edit</DropdownItem>
+                        <DropdownItem>Delete</DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  </li>
+                ))}
+                <div ref={messageEnd}></div>
             </ul>
           </SimpleBar>
         )}
@@ -164,7 +173,7 @@ export default function ChatArea(props) {
                 onSubmit={(e) => {
                   e.preventDefault();
                   props.sendMessage();
-                  // console.log(e.target[0].value);
+                  props.setMsg("")
                 }}
               >
                 <Row>
@@ -174,6 +183,7 @@ export default function ChatArea(props) {
                       name="newMessage"
                       className="border-0"
                       onChange={(e) => props.setMsg(e.target.value)}
+                      value={props.msg}
                       required
                     ></Input>
                   </Col>

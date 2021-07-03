@@ -1,19 +1,34 @@
 import SimpleBar from "simplebar-react";
 import Link from "next/link";
+import React from 'react'
 
-const Sidebar = (props) => {
+export default function Sidebar (props) {
   var isLight = false;
-
+  // if item is admin
+  // display only admin user
+  // admin (ture, false)
+  // true (true, false)
+  // 
+  // display flase default
   const MenuItem = ({ item }) => {
     return (
-      <li className="side-nav-item">
+      <li className={`side-nav-item ${item.admin && 'd-none'}`}>
         <MenuItemLink item={item} />
       </li>
     );
   };
+
+  // const MenuItem = React.forwardRef((props, ref) => 
+  //     <Link href={props.item.path} ref={ref}>
+  //     <li  className="side-nav-item">
+  //       <MenuItemLink item={props.item} />
+  //     </li>
+  //     </Link>
+  //   )
+  
   const MenuItemLink = ({ item }) => {
     return (
-      <Link href={item.path}>
+      <Link href={{pathname:item.path}}>
         <a className="side-nav-link-ref side-sub-nav-link side-nav-link">
           {item.icon && <i className={item.icon}></i>}
           {item.badge && (
@@ -32,26 +47,37 @@ const Sidebar = (props) => {
       name: "Shipment",
       path: "/shipment",
       icon: "uil-ship",
+      admin: false,
     },
     {
       name: "Quote",
       path: "/quote",
       icon: "uil-parcel",
+      admin: false,
     },
     {
       name: "Invoice",
       path: "/invoice",
       icon: "uil-invoice",
+      admin: false,
     },
     {
       name: "Chat",
       path: "/chat",
       icon: "uil-comments-alt",
+      admin: false,
     },
     {
       name: "Login",
       path: "/login",
       icon: "uil-lock",
+      admin: false,
+    },
+    {
+      name: "Customers",
+      path: "/customers",
+      icon: "uil-user-square",
+      admin: !props.token.admin,
     },
   ];
 
@@ -60,7 +86,7 @@ const Sidebar = (props) => {
       <ul className="metismenu side-nav" id="menu-bar">
         <li className="side-nav-title side-nav-item mm-active">Navigation</li>
         <li className="side-nav-item">
-          <Link href="/">
+          <Link href="/dashboard">
             <a className="side-nav-link-ref side-sub-nav-link side-nav-link">
               <i className="uil-home-alt"></i>
               <span className={`badge badge-success float-right`}>4</span>
@@ -78,30 +104,32 @@ const Sidebar = (props) => {
 
   return (
     <div className="left-side-menu">
-      <a href="/" className="logo text-center logo-light">
-        <span className="logo-lg">
-          <img
-            src={
-              isLight
-                ? "/assets/images/logo-dark.png"
-                : "/assets/images/logo.png"
-            }
-            alt="logo"
-            height="16"
-          />
-        </span>
-        <span className="logo-sm">
-          <img
-            src={
-              isLight
-                ? "/assets/images/logo_sm.png"
-                : "/assets/images/logo_sm_dark.png"
-            }
-            alt="logo"
-            height="16"
-          />
-        </span>
-      </a>
+      <Link href="/dashboard">
+        <a className="logo text-center logo-light">
+          <span className="logo-lg">
+            <img
+              src={
+                isLight
+                  ? "/assets/images/logo-dark.png"
+                  : "/assets/images/logo.png"
+              }
+              alt="logo"
+              height="16"
+            />
+          </span>
+          <span className="logo-sm">
+            <img
+              src={
+                isLight
+                  ? "/assets/images/logo_sm.png"
+                  : "/assets/images/logo_sm_dark.png"
+              }
+              alt="logo"
+              height="16"
+            />
+          </span>
+        </a>
+      </Link>
 
       <a href="/" className="logo text-center logo-dark">
         <span className="logo-lg">
@@ -136,7 +164,7 @@ const Sidebar = (props) => {
         <SideBarContent />
       </SimpleBar>
 
-      <div className="help-box text-white text-center">
+      {/* <div className="help-box text-white text-center">
         <a href="/" className="float-right close-btn text-white">
           <i className="mdi mdi-close" />
         </a>
@@ -147,9 +175,8 @@ const Sidebar = (props) => {
           Upgrade to plan to get access to unlimited reports
         </p>
         <button className="btn btn-outline-light btn-sm">Upgrade</button>
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default Sidebar;

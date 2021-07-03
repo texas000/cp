@@ -11,10 +11,10 @@ export default function Layout(props) {
   return (
     <div className="app">
       <div className="wrapper">
-        <Sidebar isMenuOpened={isMenuOpened} />
+        <Sidebar isMenuOpened={isMenuOpened} token={props.token} />
         <div className="content-page">
           <div className="content">
-            <Topbar toggleMenu={toggleMenu} />
+            <Topbar toggleMenu={toggleMenu} token={props.token} />
             <Container fluid>{props.children}</Container>
           </div>
 

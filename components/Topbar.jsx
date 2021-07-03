@@ -195,14 +195,14 @@ export default function Topbar(props) {
         >
           <span className="account-user-avatar">
             <img
-              src="/assets/images/users/avatar-4.jpg"
+              src={props.token.photoURL||"/assets/images/users/avatar-4.jpg"}
               className="rounded-circle"
               alt="user"
             />
           </span>
           <span>
-            <span className="account-user-name">Jone</span>
-            <span className="account-position">Doe</span>
+            <span className="account-user-name">{props.token.displayName||'Name'}</span>
+            <span className="account-position">{props.token.email}</span>
           </span>
         </DropdownToggle>
         <DropdownMenu

@@ -15,13 +15,19 @@ import {
 } from "reactstrap";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import firebase from "../lib/firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
-export default function Index({ API_KEY }) {
+// import firebase from "../lib/firebase";
+
+export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 	const router = useRouter();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [passType, setPassType] = useState("password");
+	if (!firebase.apps.length) {
+		firebase.initializeApp(FIREBASE_CONFIG);
+	}
 
 	const auth = firebase.auth();
 
@@ -55,9 +61,9 @@ export default function Index({ API_KEY }) {
 	};
 
 	useEffect(() => {
-		auth.onAuthStateChanged(async (user) => {
-			console.log(user);
-		});
+		// auth.onAuthStateChanged(async (user) => {
+		// 	console.log(user);
+		// });
 	}, []);
 
 	return (
@@ -206,9 +212,18 @@ export default function Index({ API_KEY }) {
 }
 
 export async function getServerSideProps() {
+	const clientCredentials = {
+		apiKey: process.env.FIREBASE_API_KEY,
+		authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+		databaseURL: process.env.FIREBASE_DATABASE,
+		projectId: process.env.FIREBASE_PROJECT_ID,
+		appId: process.env.FIREBASE_APP_ID,
+		storageBucket: "jamesworldwide-52974.appspot.com",
+	};
 	return {
 		props: {
 			API_KEY: process.env.API_KEY,
+			FIREBASE_CONFIG: clientCredentials,
 		},
 	};
 }

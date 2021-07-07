@@ -1,8 +1,8 @@
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import { useEffect } from "react";
-import Layout from "../components/Layout";
-import PageTitle from "../components/PageTitle";
+import Layout from "../../components/Layout";
+import PageTitle from "../../components/PageTitle";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
 

@@ -13,15 +13,12 @@ const fetcher = async (...args) => {
 	const res = await fetch(...args);
 	return res.json();
 };
+
 export default function Index(props) {
 	const { data: shipment } = useSWR("api/dashboard/shipment", fetcher);
 	const { data: invoice } = useSWR("api/dashboard/invoice", fetcher);
 	useEffect(() => {
 		console.log(props.token);
-		// console.log(props.token.customer.get);
-		// firebase.auth().onAuthStateChanged(async (user) => {
-		// 	console.log(user);
-		// });
 	}, []);
 
 	return (

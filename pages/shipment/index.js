@@ -7,50 +7,83 @@ import Layout from "../../components/Layout";
 import PageTitle from "../../components/PageTitle";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
+import useSWR from "swr";
+import moment from "moment";
+const fetcher = async (...args) => {
+	const res = await fetch(...args);
+	return res.json();
+};
 
 export default function page(props) {
+	const { data: shipment } = useSWR("api/dashboard/shipment", fetcher);
 	const router = useRouter();
-	var current = [];
-	var stringPath = "";
-	const paths = router.pathname.substring(1);
-	paths.split("/").map((path, i) => {
-		stringPath = stringPath.concat("/", path);
-		current.push({
-			label: path,
-			path: stringPath,
-			active: i === paths.split("/").length - 1,
-		});
-	});
+	var current = [
+		{
+			label: "Shipment",
+			path: "/shipment",
+			active: true,
+		},
+	];
 
 	const [collapse, setCollapse] = useState(true);
 	const toggle = () => setCollapse(!collapse);
 
-	function CaseDetail() {
+	function CaseDetail({ data }) {
 		return (
 			<Row className="justify-content-sm-between mt-2">
 				<Col sm={4} className="mb-2 mb-sm-0">
 					<p className="font-weight-bold">In transit to final destination</p>
-					<p>Delivery Date: in 2 days</p>
-					<small>2 Containers</small>
+					<p>Delivery Date: 2 days ago</p>
+					{/* <small>2 Containers</small> */}
 				</Col>
 				<Col sm={8}>
-					<Row>
-						<Col>
-							<div
-								style={{
-									background: "lightblue",
-									borderRadius: "50%",
-									width: "40px",
-									height: "40px",
-								}}
-								className="d-flex justify-content-center align-items-center"
-							>
-								<i className="uil-home text-center"></i>
+					<div className="horizontal-steps mb-2">
+						<div className="horizontal-steps-content">
+							<div className="step-item">
+								<span
+									data-toggle="tooltip"
+									data-placement="bottom"
+									title=""
+									data-original-title="20/08/2018 07:24 PM"
+								>
+									<small>Loading Port</small>
+									<br />
+									<small
+										className="d-inline-block text-truncate"
+										style={{ maxWidth: "100px" }}
+									>
+										{data.F_LoadingPort}
+									</small>
+								</span>
 							</div>
-							<small>Samsung SDS, Seoul</small>
-							<br />
-							<small>Cargo Ready: 1/1</small>
-						</Col>
+							<div className="step-item">
+								<span
+									data-toggle="tooltip"
+									data-placement="bottom"
+									title=""
+									data-original-title="21/08/2018 11:32 AM"
+								>
+									<small>Discharge Port</small>
+									<br />
+									<small>{data.F_DisCharge}</small>
+								</span>
+							</div>
+							<div className="step-item current">
+								<span>
+									<small>Destination</small>
+									<br />
+									<small>{data.F_FinalDest[0]}</small>
+								</span>
+							</div>
+							<div className="step-item">
+								<span>
+									<small>Delivered</small>
+								</span>
+							</div>
+						</div>
+						<div className="process-line" style={{ width: "66%" }}></div>
+					</div>
+					{/* <Row>
 						<Col>
 							<div
 								style={{
@@ -63,10 +96,9 @@ export default function page(props) {
 							>
 								<i className="uil-ship"></i>
 							</div>
-							{/* <i className="uil-plane-fly"></i> */}
-							<small>Busan, Korea</small>
+							<small>{data.F_LoadingPort}</small>
 							<br />
-							<small>Depatrue: 1/3</small>
+							<small>Depatrue: {moment(data.F_ETD).utc().format("l")}</small>
 						</Col>
 						<Col>
 							<div
@@ -79,11 +111,10 @@ export default function page(props) {
 								className="d-flex justify-content-center align-items-center"
 							>
 								<i className="uil-anchor"></i>
-								{/* <i className="uil-truck uil-flip"></i> */}
 							</div>
-							<small>Long Beach, U.S.A</small>
+							<small>{data.F_DisCharge}</small>
 							<br />
-							<small>Arrival: 1/24</small>
+							<small>Arrival: {moment(data.F_ETA).utc().format("l")}</small>
 						</Col>
 						<Col>
 							<div
@@ -97,12 +128,15 @@ export default function page(props) {
 							>
 								<i className="uil-home"></i>
 							</div>
-							<small>Fullerton WH, U.S.A</small>
+							<small>{data.F_FinalDest}</small>
 							<br />
-							<small>Delivery: 1/26</small>
+							<small>
+								Delivery: {moment(data.F_FETA[0]).utc().format("l")}
+							</small>
 						</Col>
-					</Row>
+					</Row> */}
 				</Col>
+				{/* {JSON.stringify(ga)} */}
 			</Row>
 		);
 	}
@@ -115,24 +149,41 @@ export default function page(props) {
 				<title>Shipment</title>
 			</Head>
 			<Layout token={props.token}>
-				<PageTitle breadCrumbItems={current} title={paths} />
-				<Row>
-					<Col>
-						<h5 className="m-0 pb-2" onClick={toggle}>
-							<i className="uil-angle-down"></i>
-							OIM-12345 <span className="text-muted">PO#123</span>
-						</h5>
-						<Collapse isOpen={collapse}>
-							<Link href="/shipment/oim-12345">
-								<Card className="mb-0 card-shipment">
-									<CardBody className="pb-1 pt-2">
-										<CaseDetail />
-									</CardBody>
-								</Card>
-							</Link>
-						</Collapse>
-					</Col>
-				</Row>
+				<PageTitle breadCrumbItems={current} title="Shipment" />
+				{!shipment ? (
+					<div className="preloader">
+						<div className="status">
+							<div className="bouncing-loader">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</div>
+				) : shipment.length == 0 ? (
+					<h1>Not Found</h1>
+				) : (
+					shipment.map((ga) => (
+						<Row key={ga.F_ID}>
+							<Col>
+								<h5 className="m-0 pb-2" onClick={toggle}>
+									<i className="uil-angle-down"></i>
+									<span className="text-muted">{ga.F_RefNo}</span>{" "}
+									{ga.F_CustRefNo}
+								</h5>
+								<Collapse isOpen={collapse}>
+									<Link href={`/shipment/${ga.F_RefNo}`}>
+										<Card className="card-shipment">
+											<CardBody className="pb-1 pt-2">
+												<CaseDetail data={ga} />
+											</CardBody>
+										</Card>
+									</Link>
+								</Collapse>
+							</Col>
+						</Row>
+					))
+				)}
 			</Layout>
 		</div>
 	);

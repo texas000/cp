@@ -6,56 +6,37 @@ import PageTitle from "../components/PageTitle";
 import ChatUsers from "../components/Chat/ChatUsers";
 import ChatArea from "../components/Chat/ChatArea";
 import { useEffect, useState } from "react";
-import SocketIOClient from "socket.io-client";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
+import useSWR from "swr";
 
 export default function page(props) {
+	const { data } = useSWR("/api/chat/getMessage", { refreshInterval: 1000 });
 	const router = useRouter();
-	var current = [];
-	var stringPath = "";
-	const paths = router.pathname.substring(1);
-	paths.split("/").map((path, i) => {
-		stringPath = stringPath.concat("/", path);
-		current.push({
-			label: path,
-			path: stringPath,
-			active: i === paths.split("/").length - 1,
-		});
-	});
+	var current = [
+		{
+			label: "Chat",
+			active: true,
+		},
+	];
 	const [msg, setMsg] = useState("");
-	const [temp, setTemp] = useState("");
-	const [conversation, setConversation] = useState([]);
-	useEffect(() => {
-		const socket = SocketIOClient.connect(props.base, {
-			path: "/api/socketio",
-		});
-		socket.on("connect", () => {
-			console.log("SOCKET CONNECTED!", socket.id);
-			setTemp(socket.id);
-		});
-		socket.on("message", (message) => {
-			setConversation((prev) => [...prev, message]);
-			console.log({ ...message, id: temp });
-		});
 
-		if (socket) return () => socket.disconnect();
-	}, []);
+	useEffect(() => {}, []);
 
 	const sendMessage = async () => {
 		if (msg) {
 			const message = {
-				user: props.token.displayName,
-				photo: props.token.photoURL,
+				uid: props.token.uid,
 				msg: msg,
 			};
-			const resp = await fetch("/api/chat", {
+			const resp = await fetch("/api/chat/sendMessage", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(message),
 			});
+			console.log(resp.status);
 		}
 	};
 	return (
@@ -66,7 +47,7 @@ export default function page(props) {
 				<title>James Worldwide</title>
 			</Head>
 			<Layout token={props.token}>
-				<PageTitle breadCrumbItems={current} title={paths} />
+				<PageTitle breadCrumbItems={current} title="Chat" />
 				<Row>
 					<Col xl={3} lg={3} className="order-lg-1 order-xl-1">
 						<ChatUsers />
@@ -76,7 +57,7 @@ export default function page(props) {
 							setMsg={setMsg}
 							msg={msg}
 							sendMessage={sendMessage}
-							conversation={conversation}
+							conversation={data}
 						/>
 					</Col>
 				</Row>
@@ -88,14 +69,12 @@ export async function getServerSideProps({ req }) {
 	const cookies = cookie.parse(
 		req ? req.headers.cookie || "" : window.document.cookie
 	);
-	const base = process.env.BASE_URL || "http://localhost:8080";
 
 	try {
 		const token = jwt.verify(cookies.jwitoken, process.env.API_KEY);
 		return {
 			props: {
 				token,
-				base,
 			},
 		};
 	} catch (err) {

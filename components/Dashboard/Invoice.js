@@ -11,6 +11,7 @@ import {
 	Table,
 	Button,
 } from "reactstrap";
+import moment from "moment";
 const Loader = () => (
 	<div className="preloader">
 		<div className="status">
@@ -71,7 +72,7 @@ const Invoice = ({ data }) => {
 											<td>
 												<br />
 												<span className="text-danger font-13">
-													{ga.F_DueDate}
+													{moment(ga.F_DueDate).utc().fromNow()}
 												</span>
 											</td>
 										</tr>
@@ -80,10 +81,11 @@ const Invoice = ({ data }) => {
 						</tbody>
 					</Table>
 				)}
-
-				<Button color="primary" block className="mt-2" size="sm">
-					View All
-				</Button>
+				<Link href="/invoice">
+					<Button color="primary" block className="mt-2" size="sm">
+						View All
+					</Button>
+				</Link>
 			</CardBody>
 		</Card>
 	);

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Card, CardBody, Media } from "reactstrap";
 import SimpleBar from "simplebar-react";
 
 export default function ChatUsers(props) {
+  const [selectedUser, setSelectedUser] = useState(false);
   const groupFilters = ["All", "Favourties", "Work"];
   return (
     <Card>
@@ -33,8 +35,8 @@ export default function ChatUsers(props) {
             <SimpleBar style={{ maxHeight: "556px", width: "100%" }}>
               {users.map((user, index) => {
                 return (
-                  <a href="#" key={index} className="text-body">
-                    <Media className="mt-1 p-2 bg-light">
+                  <a href="#" key={index} className="text-body" onClick={()=>setSelectedUser(user.id)}>
+                    <Media className={`mt-1 p-2 ${selectedUser===user.id && 'bg-light'}`}>
                       <img
                         src={user.avatar}
                         className="mr-2 rounded-circle"

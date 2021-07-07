@@ -123,12 +123,12 @@ export default function ChatArea(props) {
                   </Card>
                 </div>
               </li>
-              {props.conversation &&
+              {props.conversation && props.conversation.length>0 &&
                 props.conversation.map((ga, i) => (
                   <li className="clearfix" key={i}>
                     <div className="chat-avatar">
                       <img
-                        src={ga.photo||"/assets/images/users/avatar-2.jpg"}
+                        src={ga.PHOTO||"/assets/images/users/avatar-2.jpg"}
                         className="rounded"
                         alt=""
                       />
@@ -137,8 +137,8 @@ export default function ChatArea(props) {
 
                     <div className="conversation-text">
                       <div className="ctext-wrap">
-                        <i>{ga.user}</i>
-                        <p>{ga.msg}</p>
+                        <i>{ga.NAME}</i>
+                        <p>{ga.MESSAGE_BODY}</p>
                       </div>
                     </div>
 
@@ -158,7 +158,7 @@ export default function ChatArea(props) {
                     </UncontrolledDropdown>
                   </li>
                 ))}
-                <div ref={messageEnd}></div>
+                <li className="clearfix" ref={messageEnd}></li>
             </ul>
           </SimpleBar>
         )}

@@ -14,6 +14,7 @@ import {
 	Nav,
 	NavItem,
 	NavLink,
+	Alert,
 } from "reactstrap";
 import Comments from "../../components/Project/Comment";
 import cookie from "cookie";
@@ -23,6 +24,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
 import React from "react";
+import SimpleBar from "simplebar-react";
 const fetcher = async (...args) => {
 	const res = await fetch(...args);
 	return res.json();
@@ -41,7 +43,7 @@ const Loader = () => (
 export default function page(props) {
 	const router = useRouter();
 	var current = [
-		{ label: "shipment", path: "/shipment", active: false },
+		{ label: "Shipment", path: "/shipment", active: false },
 		{ label: props.refNo, path: "/shipment/1", active: true },
 	];
 	const [selectedNav, setSelectedNav] = useState(1);
@@ -77,6 +79,8 @@ export default function page(props) {
 				<PageTitle breadCrumbItems={current} title={props.refNo || ""} />
 				{!data ? (
 					<Loader />
+				) : data.length === 0 ? (
+					<Alert color="danger">{props.refNo} IS NOT FOUND</Alert>
 				) : (
 					<Row>
 						<Col xl={8} lg={6}>
@@ -103,7 +107,9 @@ export default function page(props) {
 										</DropdownMenu>
 									</UncontrolledDropdown>
 
-									<h3 className="mt-0">{project.title}</h3>
+									<h3 className="mt-0">
+										{(data && data[0].F_CustRefNo) || "PO# UNDEFINED"}
+									</h3>
 
 									<Nav tabs className="nav-bordered mb-3">
 										<NavItem>
@@ -140,29 +146,10 @@ export default function page(props) {
                 </div> */}
 									{selectedNav == 1 && (
 										<React.Fragment>
-											<h5>Project Overview:</h5>
-											<div>
-												<b>CONSIGNEE</b>: {data[0].F_CName}
-											</div>
-											<div>
-												<b>NOTIFY</b>: {data[0].F_NName}
-											</div>
-											<div>
-												<b>SHIPPER</b>: {data[0].F_SName}
-											</div>
-											{/* <p className="text-muted mb-2">{JSON.stringify(data)}</p> */}
-
-											{/* <p className="text-muted mb-4">
-												Voluptates, illo, iste itaque voluptas corrupti ratione
-												reprehenderit magni similique? Tempore, quos delectus
-												asperiores libero voluptas quod perferendis! Voluptate,
-												quod illo rerum? Lorem ipsum dolor sit amet. With
-												supporting text below as a natural lead-in to additional
-												contenposuere erat a ante.
-											</p> */}
+											<h5 className="mb-2">Project Overview:</h5>
 
 											<Row>
-												<Col md={4}>
+												<Col md={3}>
 													<div className="mb-4">
 														<h5>MBL</h5>
 														<p>
@@ -173,19 +160,44 @@ export default function page(props) {
 														</p>
 													</div>
 												</Col>
-												<Col md={4}>
+												<Col md={3}>
 													<div className="mb-4">
-														<h5>TYPE</h5>
-														<p>{data[0].F_MoveType[0]} </p>
+														<h5>VOLUME</h5>
+														<p>
+															{data.reduce((a, b) => a + (b.F_CBM || 0), 0)} CBM
+														</p>
 													</div>
 												</Col>
-												<Col md={4}>
+												<Col md={3}>
 													<div className="mb-4 text-uppercase">
-														<h5>AGNET</h5>
-														<p>{data[0].F_U1ID[0]}</p>
+														<h5>WEIGHT</h5>
+														<p>
+															{data.reduce((a, b) => a + (b.F_KGS || 0), 0)} KG
+														</p>
+													</div>
+												</Col>
+												<Col md={3}>
+													<div className="mb-4 text-uppercase">
+														<h5>VESSEL</h5>
+														<p>
+															{data[0].F_Vessel} {data[0].F_Voyage}
+														</p>
 													</div>
 												</Col>
 											</Row>
+
+											<div className="mb-2">
+												<b>CONSIGNEE</b>: {data[0].F_CName}
+											</div>
+											<div className="mb-2">
+												<b>NOTIFY</b>: {data[0].F_NName}
+											</div>
+											<div className="mb-2">
+												<b>SHIPPER</b>: {data[0].F_SName}
+											</div>
+											{/* <code className="text-muted mb-2">
+												{JSON.stringify(data)}
+											</code> */}
 										</React.Fragment>
 									)}
 									{selectedNav == 2 && (
@@ -269,20 +281,108 @@ export default function page(props) {
 						</Col>
 
 						<Col xl={4} lg={6}>
-							<Card className="d-block">
+							<Card>
+								<CardBody>
+									<h4 className="header-title mb-2">Route Detail</h4>
+
+									<SimpleBar style={{ maxHeight: "430px", width: "100%" }}>
+										<div className="timeline-alt pb-0">
+											<div className="timeline-item">
+												<i className="mdi mdi-anchor bg-info-lighten text-info timeline-icon"></i>
+												<div className="timeline-item-info">
+													<a
+														href="#"
+														className="text-info font-weight-bold mb-1 d-block"
+													>
+														{data[0].F_LoadingPort}
+													</a>
+													<small>
+														<span className="font-weight-bold">
+															{moment(data[0].F_ETD).utc().format("l")}
+														</span>
+													</small>
+													<p className="mb-0 pb-2">
+														<small className="text-muted">
+															{moment(data[0].F_ETD).utc().fromNow()}
+														</small>
+													</p>
+												</div>
+											</div>
+
+											<div className="timeline-item">
+												<i className="mdi mdi-ferry bg-primary-lighten text-primary timeline-icon"></i>
+												<div className="timeline-item-info">
+													<a
+														href="#"
+														className="text-primary font-weight-bold mb-1 d-block"
+													>
+														<span>{data[0].F_DisCharge}</span>{" "}
+													</a>
+													<small>
+														<span className="font-weight-bold">
+															{moment(data[0].F_ETA).utc().format("l")}
+														</span>
+													</small>
+													<p className="mb-0 pb-2">
+														<small className="text-muted">
+															{moment(data[0].F_ETA).utc().fromNow()}
+														</small>
+													</p>
+												</div>
+											</div>
+
+											<div className="timeline-item">
+												<i className="mdi mdi-airplane bg-info-lighten text-info timeline-icon"></i>
+												<div className="timeline-item-info">
+													<a
+														href="#"
+														className="text-info font-weight-bold mb-1 d-block"
+													>
+														<span>{data[0].F_FinalDest[0]}</span>
+													</a>
+													<small>
+														<span className="font-weight-bold">
+															{moment(data[0].F_FETA[0]).utc().format("l")}
+														</span>
+													</small>
+													<p className="mb-0 pb-2">
+														<small className="text-muted">
+															{moment(data[0].F_FETA[0]).utc().fromNow()}
+														</small>
+													</p>
+												</div>
+											</div>
+
+											<div className="timeline-item">
+												<i className="mdi mdi-truck-check bg-primary-lighten text-primary timeline-icon"></i>
+												<div className="timeline-item-info">
+													<a
+														href="#"
+														className="text-primary font-weight-bold mb-1 d-block"
+													>
+														DELIVERED
+													</a>
+													<small>
+														<span className="font-weight-bold">
+															{moment().format("l")}
+														</span>{" "}
+													</small>
+													<p className="mb-0 pb-2">
+														<small className="text-muted">
+															{moment().fromNow()}
+														</small>
+													</p>
+												</div>
+											</div>
+										</div>
+									</SimpleBar>
+								</CardBody>
+							</Card>
+							{/* <Card className="d-block">
 								<CardBody>
 									<h4 className="mt-0 mb-3">Route Detail</h4>
-									{/* <div className="vertical-steps mt-4 mb-4 pb-5"> */}
 									<ul className="vertical-steps">
 										<li className="step-item is-done">
-											<span>SHIPPER</span>
-											<br />
-											<span>
-												Cargo Ready: <strong>Unknown</strong>
-											</span>
-										</li>
-
-										<li className="step-item current">
 											<span>{data[0].F_LoadingPort}</span>
 											<br />
 											<span>
@@ -293,7 +393,7 @@ export default function page(props) {
 											</span>
 										</li>
 
-										<li className="step-item">
+										<li className="step-item current">
 											<span>{data[0].F_DisCharge}</span>
 											<br />
 											<span>
@@ -315,40 +415,8 @@ export default function page(props) {
 											</span>
 										</li>
 									</ul>
-									{/* <div className="vertical-steps-content">
-                    
-                    <div className="step-item">
-                      <span
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title=""
-                        data-original-title="20/08/2018 07:24 PM"
-                      >
-                        Order Placed
-                      </span>
-                    </div>
-                    <div className="step-item current">
-                      <span
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title=""
-                        data-original-title="21/08/2018 11:32 AM"
-                      >
-                        Packed
-                      </span>
-                    </div>
-                    <div className="step-item">
-                      <span>Shipped</span>
-                    </div>
-                    <div className="step-item">
-                      <span>Delivered</span>
-                    </div>
-                  </div> */}
-
-									{/* <div className="process-line" style={{ width: "33%" }}></div> */}
-									{/* </div> */}
 								</CardBody>
-							</Card>
+							</Card> */}
 							{/* <ProgressChart /> */}
 							{/* <Files /> */}
 						</Col>

@@ -11,6 +11,7 @@ import {
 	Table,
 	Button,
 } from "reactstrap";
+
 const Loader = () => (
 	<div className="preloader">
 		<div className="status">
@@ -60,12 +61,29 @@ const Shipment = ({ data }) => {
 											<td>
 												<h5 className="font-14 my-1">
 													<a href="/" className="text-body">
-														{ga.F_RefNo}
+														<span className="text-muted">{ga.F_RefNo}</span>{" "}
+														<span className="text-primary">
+															{ga.F_CustRefNo}
+														</span>
+														<i className="mdi mdi-ferry text-primary float-right"></i>
 													</a>
 												</h5>
-												<span className="text-muted font-13">{ga.F_ETA}</span>
+												<h5 className="font-12 my-1">
+													<span>Delivered to final destination</span>
+												</h5>
+												<div className="mt-2 progress">
+													<div
+														className="progress-bar"
+														role="progressbar"
+														aria-valuenow="100"
+														aria-valuemin="0"
+														aria-valuemax="100"
+														style={{ width: "100%" }}
+													></div>
+												</div>
+												{/* <span className="text-muted font-13">{ga.F_ETA}</span> */}
 											</td>
-											<td>
+											{/* <td>
 												<span className="text-muted font-13">Status</span>{" "}
 												<br />
 												<span className="badge badge-warning-lighten">
@@ -95,17 +113,18 @@ const Shipment = ({ data }) => {
 													{" "}
 													<i className="mdi mdi-delete"></i>
 												</a>
-											</td>
+											</td> */}
 										</tr>
 									</Link>
 								))}
 						</tbody>
 					</Table>
 				)}
-
-				<Button color="primary" block className="mt-2" size="sm">
-					View All
-				</Button>
+				<Link href="/shipment">
+					<Button color="primary" block className="mt-2" size="sm">
+						View All
+					</Button>
+				</Link>
 			</CardBody>
 		</Card>
 	);

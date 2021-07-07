@@ -52,7 +52,7 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 				if (fetchSignIn.status === 200) {
 					const data = await fetchSignIn.json();
 					document.cookie = data.token;
-				}
+				} else console.log(fetchSignIn);
 				router.push("/dashboard");
 			})
 			.catch((err) => {

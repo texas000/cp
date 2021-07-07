@@ -7,9 +7,15 @@ import Shipment from "../components/Dashboard/Shipment";
 import { useEffect } from "react";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
+import useSWR from "swr";
 // import firebase from "../lib/firebase";
-
+const fetcher = async (...args) => {
+	const res = await fetch(...args);
+	return res.json();
+};
 export default function Index(props) {
+	const { data: shipment } = useSWR("api/dashboard/shipment", fetcher);
+	const { data: invoice } = useSWR("api/dashboard/invoice", fetcher);
 	useEffect(() => {
 		console.log(props.token);
 		// console.log(props.token.customer.get);
@@ -32,13 +38,13 @@ export default function Index(props) {
 				/>
 				<div className="row">
 					<div className="col-lg-4">
-						<Shipment />
+						<Shipment data={shipment} />
 					</div>
 					<div className="col-lg-4">
 						<Quotes />
 					</div>
 					<div className="col-lg-4">
-						<Invoice />
+						<Invoice data={invoice} />
 					</div>
 				</div>
 			</Layout>

@@ -1,6 +1,10 @@
 import firestore from "../../../lib/firestore";
 
 export default (req, res) => {
+	if (token < 999) {
+		res.status(401).json({ err: 401, msg: "Unauthorized" });
+		return;
+	}
 	firestore
 		.collection("customers")
 		.orderBy("F_ID")

@@ -1,6 +1,7 @@
 import firestore from "../../lib/firestore";
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
+const sql = require("mssql");
 
 export default async (req, res) => {
 	//POST
@@ -17,26 +18,47 @@ export default async (req, res) => {
 	}
 	const body = JSON.parse(req.body);
 	// UPDATE USER INFORMATION
-	await firestore
-		.collection("users")
-		.doc(body.uid)
-		.update({
-			...body,
-			signIn: new Date(),
+
+	await sql.connect(process.env.SERVER5);
+	try {
+		const result = await sql.query(
+			`SELECT * FROM [dbo].[USER] WHERE email='${body.email}';`
+		);
+		const token = jwt.sign(result.recordset[0], process.env.API_KEY, {
+			expiresIn: "10h", // it will be expired after 10 hours
+			//expiresIn: "20d" // it will be expired after 20 days
+			//expiresIn: 120 // it will be expired after 120ms
+			//expiresIn: "120s" // it will be expired after 120s
 		});
-	await firestore
-		.collection("users")
-		.doc(body.uid)
-		.get()
-		.then((doc) => {
-			const token = jwt.sign(doc.data(), process.env.API_KEY, {
-				expiresIn: "10h", // it will be expired after 10 hours
-				//expiresIn: "20d" // it will be expired after 20 days
-				//expiresIn: 120 // it will be expired after 120ms
-				//expiresIn: "120s" // it will be expired after 120s
-			});
-			// res.setHeader("Set-Cookie", cookie.serialize("jwitoken", token));
-			const serializedToken = cookie.serialize("jwitoken", token);
-			res.json({ token: serializedToken });
-		});
+		// res.setHeader("Set-Cookie", cookie.serialize("jwitoken", token));
+		const serializedToken = cookie.serialize("jwitoken", token);
+		res.json({ token: serializedToken });
+		// res.json(result.recordset);
+	} catch (err) {
+		res.json({ err: err });
+	}
+	return sql.close();
+
+	// await firestore
+	// 	.collection("users")
+	// 	.doc(body.uid)
+	// 	.update({
+	// 		...body,
+	// 		signIn: new Date(),
+	// 	});
+	// await firestore
+	// 	.collection("users")
+	// 	.doc(body.uid)
+	// 	.get()
+	// 	.then((doc) => {
+	// 		const token = jwt.sign(doc.data(), process.env.API_KEY, {
+	// 			expiresIn: "10h", // it will be expired after 10 hours
+	// 			//expiresIn: "20d" // it will be expired after 20 days
+	// 			//expiresIn: 120 // it will be expired after 120ms
+	// 			//expiresIn: "120s" // it will be expired after 120s
+	// 		});
+	// 		// res.setHeader("Set-Cookie", cookie.serialize("jwitoken", token));
+	// 		const serializedToken = cookie.serialize("jwitoken", token);
+	// 		res.json({ token: serializedToken });
+	// 	});
 };

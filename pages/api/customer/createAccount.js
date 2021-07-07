@@ -1,29 +1,36 @@
 import firestore from "../../../lib/firestore";
 import auth from "../../../lib/auth";
+const sql = require("mssql");
 
 export default (req, res) => {
+	var info = {
+		email: "user2@example.com",
+		emailVerified: false,
+		password: "jwiinc",
+		displayName: "Shaco Kim",
+		photoURL: "https://www.mobafire.com/images/champion/square/shaco.png",
+		disabled: false,
+	};
 	// Create User
 	auth
-		.createUser({
-			email: "user@example.com",
-			emailVerified: false,
-			password: "jwiinc",
-			displayName: "Shaco Kim",
-			photoURL: "https://www.mobafire.com/images/champion/square/shaco.png",
-			disabled: false,
+		.createUser(info)
+		.then(async (userRecord) => {
+			const { uid } = userRecord;
+			// Store User Data to Database
+			await sql.connect(process.env.SERVER5);
+			try {
+				const result = await sql.query(
+					`INSERT INTO [dbo].[USER] ([uid],[created],[customer],[email],[photoURL],[signIn],[displayName]) VALUES (N'${uid}', GETDATE(), '0', N'${info.email}', N'${info.photoURL}', GETDATE(), N'${info.displayName}');`
+				);
+				res.json(result);
+			} catch (err) {
+				sql.close();
+				res.json(err);
+			}
 		})
-		.then((userRecord) => {
-			const { uid, email, displayName, photoURL } = userRecord;
-			const created = userRecord.metadata.creationTime;
-			createUserData(uid, { email, displayName, photoURL, created });
-		})
-		.then(() => {
-			res.json({ msg: "success" });
+		.catch((err) => {
+			res.json(err);
 		});
-	// Store User Data to Database
-	async function createUserData(id, data) {
-		await firestore.collection("users").doc(id).set(data);
-	}
 };
 export const config = {
 	api: {

@@ -25,6 +25,8 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [passType, setPassType] = useState("password");
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
 	if (!firebase.apps.length) {
 		firebase.initializeApp(FIREBASE_CONFIG);
 	}
@@ -33,6 +35,7 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 
 	const signInWithEmail = (e) => {
 		e.preventDefault();
+		setLoading(true);
 		auth
 			.signInWithEmailAndPassword(username, password)
 			.then(async (credentials) => {
@@ -56,7 +59,9 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 				router.push("/dashboard");
 			})
 			.catch((err) => {
-				console.log(err.message);
+				setLoading(false);
+				console.log(err);
+				setError(err.message);
 			});
 	};
 
@@ -89,17 +94,17 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 
 									<CardBody className="p-4 position-relative">
 										{/* preloader */}
-										{/* {this.props.loading && (
-                  <div className="preloader">
-                    <div className="status">
-                      <div className="bouncing-loader">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                      </div>
-                    </div>
-                  </div>
-                )} */}
+										{loading && (
+											<div className="preloader">
+												<div className="status">
+													<div className="bouncing-loader">
+														<div></div>
+														<div></div>
+														<div></div>
+													</div>
+												</div>
+											</div>
+										)}
 
 										<div className="text-center w-75 m-auto">
 											<h4 className="text-dark-50 text-center mt-0 font-weight-bold">
@@ -110,14 +115,11 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 											</p>
 										</div>
 
-										{/* {this.props.error && (
-                  <Alert
-                    color="danger"
-                    isOpen={this.props.error ? true : false}
-                  >
-                    <div>{this.props.error}</div>
-                  </Alert>
-                )} */}
+										{error != false && (
+											<Alert color="danger" isOpen={error ? true : false}>
+												<div>{error}</div>
+											</Alert>
+										)}
 
 										<Form onSubmit={(e) => signInWithEmail(e)}>
 											<div className="mb-3">

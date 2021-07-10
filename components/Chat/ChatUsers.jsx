@@ -3,7 +3,6 @@ import { Card, CardBody, Media } from "reactstrap";
 import SimpleBar from "simplebar-react";
 
 export default function ChatUsers(props) {
-  const [selectedUser, setSelectedUser] = useState(false);
   const groupFilters = ["All", "Favourties", "Work"];
   return (
     <Card>
@@ -32,11 +31,50 @@ export default function ChatUsers(props) {
                 <span className="mdi mdi-magnify search-icon"></span>
               </div>
             </div>
-            <SimpleBar style={{ maxHeight: "556px", width: "100%" }}>
+            {/* 556px max height */}
+            <SimpleBar style={{ maxHeight: "400px", width: "100%" }}>
+              {
+                cpusers.map((user, index)=> {
+                  return (
+                    <a href="#" key={index} className="text-body" onClick={()=>props.setSelectedUser(user.uid)}>
+                    <Media className={`mt-1 p-2 ${props.selectedUser===user.uid && 'bg-light'}`}>
+                      <img
+                        src={user.photoURL}
+                        className="mr-2 rounded-circle"
+                        height="48"
+                        alt=""
+                      />
+
+                      <Media body>
+                        <h5 className="mt-0 mb-0 font-14">
+                          <span className="float-right text-muted font-12">
+                            4:30am
+                          </span>
+                          {user.displayName}
+                        </h5>
+                        <p className="mt-1 mb-0 text-muted font-14">
+                          <span className="w-25 float-right text-right">
+                            <span className="badge badge-danger-lighten">
+                                1234
+                              </span>
+                            {/* {user.totalUnread != 0 && (
+                              <span className="badge badge-danger-lighten">
+                                {user.totalUnread}
+                              </span>
+                            )} */}
+                          </span>
+                          <span className="w-75">hello</span>
+                        </p>
+                      </Media>
+                    </Media>
+                  </a>
+                  )
+                })
+              }
               {users.map((user, index) => {
                 return (
-                  <a href="#" key={index} className="text-body" onClick={()=>setSelectedUser(user.id)}>
-                    <Media className={`mt-1 p-2 ${selectedUser===user.id && 'bg-light'}`}>
+                  <a href="#" key={index} className="text-body" onClick={()=>props.setSelectedUser(user.id)}>
+                    <Media className={`mt-1 p-2 ${props.selectedUser===user.id && 'bg-light'}`}>
                       <img
                         src={user.avatar}
                         className="mr-2 rounded-circle"
@@ -73,6 +111,8 @@ export default function ChatUsers(props) {
     </Card>
   );
 }
+
+const cpusers = [{"uid":"RSaLEB9SuQSpBSl9Ow5AV4hZ0Iz1","created":"2021-07-06T10:41:00.000Z","customer":0,"email":"user2@example.com","photoURL":"https://www.mobafire.com/images/champion/square/shaco.png","signIn":"2021-07-06T10:41:00.000Z","displayName":"Shaco Kim","admin":0},{"uid":"p7ixY3zCjOQ0Kq67ABHqySvhQVh2","created":"2021-06-01T00:00:00.000Z","customer":0,"email":"test@test.com","photoURL":"https://www.mobafire.com/images/champion/square/shaco.png","signIn":"2021-07-06T00:00:00.000Z","displayName":"Customer Support","admin":999}]
 
 const users = [
   {

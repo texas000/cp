@@ -204,7 +204,7 @@ export default function page(props) {
 										<React.Fragment>
 											<Card>
 												<CardBody>
-													<h5 className="card-title mb-3">Files</h5>
+													<h5 className="card-title mb-3">Details</h5>
 
 													{data &&
 														data.map((ga) => (

@@ -14,8 +14,9 @@ export default async function handler(req, res) {
 
 	try {
 		const token = jwt.verify(cookies.jwitoken, process.env.API_KEY);
+		let pool = new sql.ConnectionPool(process.env.SERVER2);
 		try {
-			let pool = await sql.connect(process.env.SERVER2);
+			await pool.connect();
 			let result = await pool
 				.request()
 				.query(
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
 		} catch (err) {
 			res.json(err);
 		}
-		return sql.close();
+		return pool.close();
 	} catch (err) {
 		if (err) {
 			res.status(403).json({ err: 403, msg: "Invalid Token" });

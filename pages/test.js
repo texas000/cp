@@ -13,14 +13,13 @@ import {
 } from "reactstrap";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
-import useSWR from "swr";
 
 export default function page(props) {
 	// const { data } = useSWR("/api/photo/getPhoto");
 	const router = useRouter();
 	var current = [
 		{
-			label: "Quote",
+			label: "Test",
 			path: "/",
 			active: true,
 		},
@@ -31,10 +30,10 @@ export default function page(props) {
 			<Head>
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta charSet="utf-8" />
-				<title>Quote</title>
+				<title>Test</title>
 			</Head>
 			<Layout token={props.token}>
-				<PageTitle breadCrumbItems={current} title="Quote" />
+				<PageTitle breadCrumbItems={current} title="Test" />
 				<Row>
 					<Col>
 						<Card className="mb-0">
@@ -43,8 +42,7 @@ export default function page(props) {
 								<CardSubtitle className="mt-2">
 									Get an instant quotation for ocean shipment
 								</CardSubtitle>
-								{/* <image src="http://localhost:8080/api/photo/getPhoto" /> */}
-								<button className="btn btn-primary mt-4">Continue</button>
+								<img src="http://jameswgroup.com:49991/api/forwarding/test/image.png" />
 							</CardBody>
 						</Card>
 					</Col>

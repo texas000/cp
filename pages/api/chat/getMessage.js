@@ -2,11 +2,17 @@ const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
 const sql = require("mssql");
 
+// 1F25F58A-8DB7-49FB-A51B-AAFEF00F9787
+
 export default async function handler(req, res) {
-	const { id } = req.query;
+	const { user } = req.query;
 	const auth = req.headers.authorization;
 	const rawCookie = req.headers.cookie || "";
 	const cookies = cookie.parse(rawCookie);
+	if (!user) {
+		res.status(404).json({ err: 404, msg: "Not Found" });
+		return;
+	}
 	// if (auth !== process.env.API_KEY) {
 	// 	res.status(401).json({ err: 401, msg: "Unauthorized" });
 	// 	return;
@@ -14,18 +20,22 @@ export default async function handler(req, res) {
 
 	try {
 		const token = jwt.verify(cookies.jwitoken, process.env.API_KEY);
+		let pool = new sql.ConnectionPool(process.env.SERVER5);
 		try {
-			let pool = await sql.connect(process.env.SERVER5);
-			let result = await pool
-				.request()
-				.query(
-					`SELECT *, (SELECT displayName FROM [dbo].[USER] where [uid]=[CREATOR_ID]) AS NAME, (SELECT photoURL FROM [dbo].[USER] where [uid]=[CREATOR_ID]) AS PHOTO FROM [dbo].[MESSAGE];`
-				);
+			await pool.connect();
+			let result = await pool.request().query(
+				`SELECT M.ID, M.CREATE_DATE, M.MESSAGE_BODY, R.IS_READ, M.CREATOR_ID,
+				(SELECT displayName from [dbo].[USER] where M.CREATOR_ID=uid) AS NAME,
+				(SELECT photoURL from [dbo].[USER] where M.CREATOR_ID=uid) AS PHOTO
+					FROM [dbo].[MESSAGE_RECIPIENT] AS R
+					LEFT JOIN [MESSAGE] AS M ON M.ID=R.MESSAGE_ID 
+					WHERE (R.RECIPIENT_ID='${user}' AND M.CREATOR_ID='${token.uid}') OR (R.RECIPIENT_ID='${token.uid}' AND M.CREATOR_ID='${user}')`
+			);
 			res.json(result.recordset);
 		} catch (err) {
 			res.json(err);
 		}
-		return sql.close();
+		return pool.close();
 	} catch (err) {
 		if (err) {
 			res.status(403).json({ err: 403, msg: "Invalid Token" });

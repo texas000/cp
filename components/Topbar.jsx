@@ -7,6 +7,7 @@ import {
 } from "reactstrap";
 import SimpleBar from "simplebar-react";
 import Link from "next/link";
+import useSWR from "swr";
 
 const Notifications = [
   {
@@ -130,7 +131,9 @@ const SearchResults = [
 
 export default function Topbar(props) {
   const [searchClick, setSearchClick] = useState(false);
+  const [notiClick, setNotiClick] = useState(false);
   const toggleSearch = () => setSearchClick((prevState) => !prevState);
+  const {data} = useSWR('/api/chat/getUnread')
 
   function TopbarSearch() {
     return (
@@ -255,6 +258,18 @@ export default function Topbar(props) {
               </h5>
             </div>
             <SimpleBar style={{ maxHeight: "230px" }}>
+              {data && data.length>0 && data.map(ga=>(
+                <a key={ga.ID} href="#" className="dropdown-item notify-item">
+                  <div className={`notify-icon bg-primary`}>
+                      <img src={ga.PHOTO} className="notify-icon"/>
+                      {/* <i className="mdi mdi-comment-account-outline"></i> */}
+                    </div>
+                    <p className="notify-details">
+                      {ga.NAME}
+                      <small className="text-muted">{ga.MESSAGE_BODY}</small>
+                    </p>
+                </a>
+              ))}
               {Notifications.map((item, i) => {
                 return (
                   <a

@@ -2,7 +2,7 @@ import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
-import { Col, Row, Collapse, Card, CardBody } from "reactstrap";
+import { Col, Row, Collapse, Card, CardBody, Alert } from "reactstrap";
 import Layout from "../../components/Layout";
 import PageTitle from "../../components/PageTitle";
 import cookie from "cookie";
@@ -15,7 +15,8 @@ const fetcher = async (...args) => {
 };
 
 export default function page(props) {
-	const { data: shipment } = useSWR("api/dashboard/shipment", fetcher);
+	const [pagination, setPagination] = useState(1);
+	const { data: shipment } = useSWR(`api/shipment/page/${pagination}`, fetcher);
 	const router = useRouter();
 	var current = [
 		{
@@ -72,7 +73,7 @@ export default function page(props) {
 								<span>
 									<small>Destination</small>
 									<br />
-									<small>{data.F_FinalDest[0]}</small>
+									<small>{data.F_FinalDest}</small>
 								</span>
 							</div>
 							<div className="step-item">
@@ -150,6 +151,85 @@ export default function page(props) {
 			</Head>
 			<Layout token={props.token}>
 				<PageTitle breadCrumbItems={current} title="Shipment" />
+				<nav aria-label="Page navigation">
+					<ul className="pagination justify-content-end">
+						<li className={`page-item ${pagination === 1 && "disabled"}`}>
+							<a
+								className="page-link"
+								onClick={() => setPagination(pagination - 1)}
+								href="#"
+							>
+								Previous
+							</a>
+						</li>
+						<li
+							className={`page-item ${
+								shipment && shipment.length == 0 && "disabled"
+							} ${pagination === 1 && "active"}`}
+						>
+							<a
+								className="page-link"
+								href="#"
+								onClick={() => {
+									if (pagination != 1) {
+										setPagination(pagination - 1);
+									}
+								}}
+							>
+								{pagination === 1 ? 1 : pagination - 1}
+							</a>
+						</li>
+						<li
+							className={`page-item ${
+								shipment && shipment.length == 0 && "disabled"
+							} ${pagination > 1 && "active"}`}
+						>
+							<a
+								className="page-link"
+								href="#"
+								onClick={() => {
+									if (pagination === 1) {
+										setPagination(2);
+									}
+								}}
+							>
+								{pagination === 1 ? 2 : pagination}
+							</a>
+						</li>
+						<li
+							className={`page-item ${
+								shipment && shipment.length != 10 && "disabled"
+							}`}
+						>
+							<a
+								className="page-link"
+								href="#"
+								onClick={() => {
+									if (pagination === 1) {
+										setPagination(3);
+									} else {
+										setPagination(pagination + 1);
+									}
+								}}
+							>
+								{pagination === 1 ? 3 : pagination + 1}
+							</a>
+						</li>
+						<li
+							className={`page-item ${
+								shipment && shipment.length != 10 && "disabled"
+							}`}
+						>
+							<a
+								className="page-link"
+								href="#"
+								onClick={() => setPagination(pagination + 1)}
+							>
+								Next
+							</a>
+						</li>
+					</ul>
+				</nav>
 				{!shipment ? (
 					<div className="preloader">
 						<div className="status">
@@ -161,7 +241,7 @@ export default function page(props) {
 						</div>
 					</div>
 				) : shipment.length == 0 ? (
-					<h1>Not Found</h1>
+					<Alert color="danger">No shipment is avaiable</Alert>
 				) : (
 					shipment.map((ga) => (
 						<Row key={ga.F_ID}>

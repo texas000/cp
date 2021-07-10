@@ -14,17 +14,7 @@ const fetcher = async (...args) => {
 export default function page(props) {
 	const router = useRouter();
 	const { data } = useSWR("/api/customer/getList", fetcher);
-	var current = [];
-	var stringPath = "";
-	const paths = router.pathname.substring(1);
-	paths.split("/").map((path, i) => {
-		stringPath = stringPath.concat("/", path);
-		current.push({
-			label: path,
-			path: stringPath,
-			active: i === paths.split("/").length - 1,
-		});
-	});
+	var current = [{ label: "Customer", path: "/customer", active: true }];
 
 	return (
 		<div>
@@ -34,25 +24,33 @@ export default function page(props) {
 				<title>Customer</title>
 			</Head>
 			<Layout token={props.token}>
-				<PageTitle breadCrumbItems={current} title={paths} />
-				<Card>
+				<PageTitle breadCrumbItems={current} title="Customers" />
+				<Card className="py-2 px-2">
 					<Table size="sm">
 						<thead>
 							<tr>
-								<th>ID</th>
+								<th>USER ID</th>
 								<th>NAME</th>
-								<th>CITY</th>
-								<th>COUNTRY</th>
+								<th>EMAIL</th>
+								<th>PHOTO</th>
+								<th>CUSTOMER</th>
 							</tr>
 						</thead>
 						<tbody>
 							{data &&
 								data.map((ga) => (
-									<tr key={ga.F_ID}>
-										<td>{ga.F_ID}</td>
-										<td>{ga.F_FName}</td>
-										<td>{ga.F_City}</td>
-										<td>{ga.F_Country}</td>
+									<tr key={ga.uid}>
+										<td>{ga.uid}</td>
+										<td>{ga.displayName}</td>
+										<td>{ga.email}</td>
+										<td>
+											<img
+												src={ga.photoURL}
+												className="rounded-circle img-thumbnail"
+												style={{ height: "50px" }}
+											/>
+										</td>
+										<td>{ga.customer}</td>
 									</tr>
 								))}
 						</tbody>

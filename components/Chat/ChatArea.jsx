@@ -1,3 +1,4 @@
+import moment from "moment";
 import { createRef } from "react";
 import { useEffect, useState } from "react";
 import {
@@ -29,14 +30,16 @@ const Loader = () => (
 
 export default function ChatArea(props) {
   const messageEnd = createRef(null)
-  const scrollToBottom = () => {
-    messageEnd.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
+  const scrollToBottom = () => {
+    messageEnd.current?.scrollIntoView({ behavior: "smooth", block: 'end' })
+  }
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     setIsLoaded(true);
-    scrollToBottom()
+    setTimeout(()=>{
+      scrollToBottom()
+    },100)
   }, [props]);
   return (
     <Card>
@@ -44,10 +47,9 @@ export default function ChatArea(props) {
         {!isLoaded ? (
           <Loader />
         ) : (
-          <SimpleBar style={{ maxHeight: "556px", width: "100%" }}>
+          <SimpleBar style={{ maxHeight: "395px", minHeight: "395px", width: "100%" }}>
             <ul className="conversation-list">
-              
-              <li className="clearfix">
+              {/* <li className="clearfix">
                 <div className="chat-avatar">
                   <img
                     src="/assets/images/users/avatar-2.jpg"
@@ -122,17 +124,17 @@ export default function ChatArea(props) {
                     </div>
                   </Card>
                 </div>
-              </li>
+              </li> */}
               {props.conversation && props.conversation.length>0 &&
                 props.conversation.map((ga, i) => (
-                  <li className="clearfix" key={i}>
+                  <li className={`clearfix ${ga.CREATOR_ID==props.token.uid && 'odd'}`} key={i}>
                     <div className="chat-avatar">
                       <img
                         src={ga.PHOTO||"/assets/images/users/avatar-2.jpg"}
                         className="rounded"
                         alt=""
                       />
-                      <i>10:10</i>
+                      <i>{ga && moment(ga.CREATE_DATE, 'YYYY-MM-DD HH:mm:ss').fromNow()}</i>
                     </div>
 
                     <div className="conversation-text">
@@ -151,7 +153,7 @@ export default function ChatArea(props) {
                       </DropdownToggle>
 
                       <DropdownMenu>
-                        <DropdownItem>Copy Message</DropdownItem>
+                        <DropdownItem onClick={()=>alert("copy")}>Copy Message</DropdownItem>
                         <DropdownItem>Edit</DropdownItem>
                         <DropdownItem>Delete</DropdownItem>
                       </DropdownMenu>

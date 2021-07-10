@@ -26,7 +26,7 @@ export default function Index(props) {
 			<Head>
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta charSet="utf-8" />
-				<title>James Worldwide</title>
+				<title>Dashboard</title>
 			</Head>
 			<Layout token={props.token}>
 				<PageTitle

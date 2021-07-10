@@ -3,7 +3,7 @@ const cookie = require("cookie");
 const sql = require("mssql");
 
 export default async function handler(req, res) {
-	const { recipient } = req.query;
+	const { id } = req.query;
 	const auth = req.headers.authorization;
 	const rawCookie = req.headers.cookie || "";
 	const cookies = cookie.parse(rawCookie);
@@ -11,28 +11,25 @@ export default async function handler(req, res) {
 	// 	res.status(401).json({ err: 401, msg: "Unauthorized" });
 	// 	return;
 	// }
-	if (!recipient) {
-		res.status(404).json({ err: 404, msg: "Not Found" });
-		return;
-	}
 
 	try {
 		const token = jwt.verify(cookies.jwitoken, process.env.API_KEY);
-		const message = req.body;
-		let pool = new sql.ConnectionPool(process.env.SERVER5);
+		let pool = await sql.connect(process.env.SERVER5);
 		try {
-			await pool.connect();
-			let result = await pool.request().query(
-				`INSERT INTO [dbo].[MESSAGE] ([SUBJECT]
-                        ,[CREATOR_ID]
-                        ,[MESSAGE_BODY]
-                        ,[CREATE_DATE]
-                        ,[EXPIRY_DATE]
-                        ,[IS_REMINDER]
-                        ,[REMINDER_FREQUENCY_ID]) VALUES ('SUBJECT', '${message.uid}', '${message.msg}', GETDATE(), '2021-12-30', '0', '1');
-				INSERT INTO [dbo].[MESSAGE_RECIPIENT] ([RECIPIENT_ID], [MESSAGE_ID], [IS_READ]) VALUES('${recipient}',@@IDENTITY, 0);`
-			);
-			res.json(result);
+			let result = await pool.request().query(`SELECT * FROM IMAGES;`);
+
+			var fileContents = Buffer(result.recordset[0].imageFile, "base64");
+			// res.set("Content-Type", "image/jpg");
+			res.json(result.recordset[1]);
+
+			// res.contentType("image/png");
+
+			// res.send(
+			// 	`data:image/png;base64, ${Buffer.from(
+			// 		result.recordset[0].imageFile
+			// 	).toString("base64")}`
+			// );
+			// res.json();
 		} catch (err) {
 			res.json(err);
 		}

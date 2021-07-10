@@ -2,8 +2,9 @@ const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
 const sql = require("mssql");
 
+// 1F25F58A-8DB7-49FB-A51B-AAFEF00F9787
+
 export default async function handler(req, res) {
-	const { recipient } = req.query;
 	const auth = req.headers.authorization;
 	const rawCookie = req.headers.cookie || "";
 	const cookies = cookie.parse(rawCookie);
@@ -11,28 +12,22 @@ export default async function handler(req, res) {
 	// 	res.status(401).json({ err: 401, msg: "Unauthorized" });
 	// 	return;
 	// }
-	if (!recipient) {
-		res.status(404).json({ err: 404, msg: "Not Found" });
-		return;
-	}
 
 	try {
 		const token = jwt.verify(cookies.jwitoken, process.env.API_KEY);
-		const message = req.body;
 		let pool = new sql.ConnectionPool(process.env.SERVER5);
 		try {
 			await pool.connect();
 			let result = await pool.request().query(
-				`INSERT INTO [dbo].[MESSAGE] ([SUBJECT]
-                        ,[CREATOR_ID]
-                        ,[MESSAGE_BODY]
-                        ,[CREATE_DATE]
-                        ,[EXPIRY_DATE]
-                        ,[IS_REMINDER]
-                        ,[REMINDER_FREQUENCY_ID]) VALUES ('SUBJECT', '${message.uid}', '${message.msg}', GETDATE(), '2021-12-30', '0', '1');
-				INSERT INTO [dbo].[MESSAGE_RECIPIENT] ([RECIPIENT_ID], [MESSAGE_ID], [IS_READ]) VALUES('${recipient}',@@IDENTITY, 0);`
+				`SELECT TOP 5 M.ID, M.CREATE_DATE, M.MESSAGE_BODY, R.IS_READ, M.CREATOR_ID,
+					(SELECT displayName from [dbo].[USER] where M.CREATOR_ID=uid) AS NAME,
+					(SELECT photoURL from [dbo].[USER] where M.CREATOR_ID=uid) AS PHOTO
+						FROM [dbo].[MESSAGE_RECIPIENT] AS R
+						LEFT JOIN [MESSAGE] AS M ON M.ID=R.MESSAGE_ID 
+						WHERE R.RECIPIENT_ID='${token.uid}'`
 			);
-			res.json(result);
+			// `SELECT *, (SELECT displayName FROM [dbo].[USER] where [uid]=[CREATOR_ID]) AS NAME, (SELECT photoURL FROM [dbo].[USER] where [uid]=[CREATOR_ID]) AS PHOTO FROM [dbo].[MESSAGE];`
+			res.json(result.recordset);
 		} catch (err) {
 			res.json(err);
 		}

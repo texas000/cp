@@ -54,7 +54,7 @@ const Invoice = ({ data }) => {
 						className="table-centered table-nowrap table-hover mb-0"
 					>
 						<tbody>
-							{data &&
+							{data.length ? (
 								data.map((ga) => (
 									<Link key={ga.F_ID} href={`/invoice/${ga.F_InvoiceNo}`}>
 										<tr>
@@ -77,7 +77,12 @@ const Invoice = ({ data }) => {
 											</td>
 										</tr>
 									</Link>
-								))}
+								))
+							) : (
+								<tr>
+									<td colSpan="2">NO PENDING INVOICE</td>
+								</tr>
+							)}
 						</tbody>
 					</Table>
 				)}

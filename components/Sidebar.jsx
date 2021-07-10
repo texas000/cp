@@ -62,12 +62,12 @@ export default function Sidebar (props) {
       icon: "uil-comments-alt",
       admin: false,
     },
-    {
-      name: "Login",
-      path: "/login",
-      icon: "uil-lock",
-      admin: false,
-    },
+    // {
+    //   name: "Login",
+    //   path: "/login",
+    //   icon: "uil-lock",
+    //   admin: false,
+    // },
     {
       name: "Customers",
       path: "/customers",

@@ -16,66 +16,14 @@ export default function page(props) {
 	const router = useRouter();
 
 	var current = [
-		{ label: "shipment", path: "/invoice", active: false },
+		{ label: "Invoice", path: "/invoice", active: false },
 		{ label: props.refNo, path: "/invoice/1", active: true },
 	];
 	const { data: invoice } = useSWR(`/api/invoice/${props.refNo}`, fetcher);
 
-	var data = {
-		customer: "Cooper Hobson",
-		notes:
-			"Please find below a cost-breakdown for the recent work completed. Please make payment at your earliest convenience, and do not hesitate to contact me with any questions.",
-		order_date: "Jan 17, 2018",
-		order_status: "Paid",
-		order_id: "123456",
-		billing_address: {
-			line_1: "Lynne K. Higby",
-			line_2: "795 Folsom Ave, Suite 600",
-			city: "San Francisco",
-			state: "CA",
-			zip: 94107,
-			phone: "(123) 456-7890",
-		},
-		shipping_address: {
-			line_1: "Cooper Hobson",
-			line_2: "795 Folsom Ave, Suite 600",
-			city: "San Francisco",
-			state: "CA",
-			zip: 94107,
-			phone: "(123) 456-7890",
-		},
-		items: [
-			{
-				id: 1,
-				name: "Laptop",
-				description: 'Brand Model VGN-TXN27N/B 11.1" Notebook PC',
-				qty: 1,
-				unit_cost: "$1799.00",
-				total: "$1799.00",
-			},
-			{
-				id: 2,
-				name: "Warranty",
-				description: "Two Year Extended Warranty - Parts and Labor",
-				qty: 3,
-				unit_cost: "$499.00",
-				total: "$1497.00",
-			},
-			{
-				id: 3,
-				name: "LED",
-				description: "80cm (32) HD Ready LED TV",
-				qty: 2,
-				unit_cost: "$412.00",
-				total: "$824.00",
-			},
-		],
-		sub_total: "$4120.00",
-		vat: "$515.00",
-		total: "$4635.00",
-	};
-
-	useEffect(() => {}, []);
+	useEffect(() => {
+		console.log(invoice);
+	}, [invoice]);
 	return (
 		<div>
 			<Head>
@@ -96,6 +44,8 @@ export default function page(props) {
 							</div>
 						</div>
 					</div>
+				) : invoice.length == 0 ? (
+					<h1>NOT FOUND</h1>
 				) : (
 					<Row>
 						<Col>

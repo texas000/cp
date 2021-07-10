@@ -13,16 +13,21 @@ export default async function handler(req, res) {
 
 	try {
 		const token = jwt.verify(cookies.jwitoken, process.env.API_KEY);
-		await sql.connect(process.env.SERVER2);
+		let pool = new sql.ConnectionPool(process.env.SERVER2);
+
 		try {
-			const Invoice = await sql.query(
-				`SELECT TOP 100 * FROM T_INVOHD WHERE F_BillTo='10' AND F_PaidAmt='0' ORDER BY F_ID DESC;`
-			);
-			res.json(Invoice.recordset);
+			await pool.connect();
+			let result = await pool
+				.request()
+				.query(
+					`SELECT TOP 100 * FROM [dbo].[T_INVOHD] WHERE F_BillTo='10' AND (F_InvoiceAmt-F_PaidAmt<>0) ORDER BY F_ID DESC;`
+				);
+			res.json(result.recordset);
 		} catch (err) {
-			res.json({ err: err });
+			res.json(err);
 		}
-		return sql.close();
+
+		return pool.close();
 	} catch (err) {
 		if (err) {
 			res.status(403).json({ err: 403, msg: "Invalid Token" });

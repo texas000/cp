@@ -17,16 +17,20 @@ export default (req, res) => {
 		.then(async (userRecord) => {
 			const { uid } = userRecord;
 			// Store User Data to Database
-			await sql.connect(process.env.SERVER5);
+			let pool = new sql.ConnectionPool(process.env.SERVER5);
 			try {
-				const result = await sql.query(
-					`INSERT INTO [dbo].[USER] ([uid],[created],[customer],[email],[photoURL],[signIn],[displayName]) VALUES (N'${uid}', GETDATE(), '0', N'${info.email}', N'${info.photoURL}', GETDATE(), N'${info.displayName}');`
-				);
+				await pool.connect();
+				let result = await pool
+					.request()
+					.query(
+						`INSERT INTO [dbo].[USER] ([uid],[created],[customer],[email],[photoURL],[signIn],[displayName]) VALUES (N'${uid}', GETDATE(), '0', N'${info.email}', N'${info.photoURL}', GETDATE(), N'${info.displayName}');`
+					);
 				res.json(result);
 			} catch (err) {
 				sql.close();
 				res.json(err);
 			}
+			return pool.close();
 		})
 		.catch((err) => {
 			res.json(err);

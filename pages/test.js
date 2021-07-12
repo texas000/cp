@@ -43,8 +43,8 @@ export default function page(props) {
 									Get an instant quotation for ocean shipment
 								</CardSubtitle>
 								<a
-									href="http://jameswgroup.com:49991/api/forwarding/test/image.png"
-									target="_blank"
+									href="https://jameswi.com/api/forwarding/test/image.png"
+									download
 									className="btn btn-primary"
 								>
 									Click Me

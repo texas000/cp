@@ -5,7 +5,7 @@ import PageTitle from "../components/PageTitle";
 import useSWR from "swr";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
-import { Card, Table } from "reactstrap";
+import { Card, Table, Button } from "reactstrap";
 const fetcher = async (...args) => {
 	const res = await fetch(...args);
 	return res.json();
@@ -56,6 +56,8 @@ export default function page(props) {
 						</tbody>
 					</Table>
 				</Card>
+
+				<Button>Create User</Button>
 			</Layout>
 		</div>
 	);

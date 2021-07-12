@@ -29,18 +29,18 @@ export default function page(props) {
 					<Table size="sm">
 						<thead>
 							<tr>
-								<th>USER ID</th>
+								<th>CUSTOMER</th>
 								<th>NAME</th>
 								<th>EMAIL</th>
 								<th>PHOTO</th>
-								<th>CUSTOMER</th>
+								<th>USER ID</th>
 							</tr>
 						</thead>
 						<tbody>
 							{data &&
 								data.map((ga) => (
 									<tr key={ga.uid}>
-										<td>{ga.uid}</td>
+										<td>{ga.companyName}</td>
 										<td>{ga.displayName}</td>
 										<td>{ga.email}</td>
 										<td>
@@ -50,7 +50,7 @@ export default function page(props) {
 												style={{ height: "50px" }}
 											/>
 										</td>
-										<td>{ga.customer}</td>
+										<td>{ga.uid}</td>
 									</tr>
 								))}
 						</tbody>

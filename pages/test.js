@@ -42,7 +42,13 @@ export default function page(props) {
 								<CardSubtitle className="mt-2">
 									Get an instant quotation for ocean shipment
 								</CardSubtitle>
-								<img src="http://jameswgroup.com:49991/api/forwarding/test/image.png" />
+								<a
+									href="http://jameswgroup.com:49991/api/forwarding/test/image.png"
+									target="_blank"
+									className="btn btn-primary"
+								>
+									Click Me
+								</a>
 							</CardBody>
 						</Card>
 					</Col>

@@ -53,12 +53,59 @@ export default async function handler(req, res) {
 					`SELECT * FROM T_COMPANY WHERE F_ID='${result.recordset[0].F_ShipTo}'`
 				);
 
-			res.json({
-				Main: result.recordset[0],
-				Detail: detail.recordset,
-				Bill: billto.recordset[0],
-				Ship: shipto.recordset[0],
-			});
+			let house = await pool
+				.request()
+				.query(
+					`SELECT * FROM ${result.recordset[0].F_TBName} WHERE F_ID='${result.recordset[0].F_TBID}'`
+				);
+			var isOIM = house.recordset[0].hasOwnProperty("F_OIMBLID");
+			var isOOM = house.recordset[0].hasOwnProperty("F_OOMBLID");
+			var isAIM = house.recordset[0].hasOwnProperty("F_AIMBLID");
+			var isAOM = house.recordset[0].hasOwnProperty("F_AOMBLID");
+			if (isOIM || isOOM || isAIM || isAOM) {
+				let master = await pool
+					.request()
+					.query(
+						`SELECT * FROM ${
+							isOIM
+								? "T_OIMMAIN"
+								: isOOM
+								? "T_OOMMAIN"
+								: isAIM
+								? "T_AIMMAIN"
+								: isAOM
+								? "T_AOMMAIN"
+								: ""
+						} WHERE F_ID='${
+							isOIM
+								? house.recordset[0].F_OIMBLID
+								: isOOM
+								? house.recordset[0].F_OOMBLID
+								: isAIM
+								? house.recordset[0].F_AIMBLID
+								: isAOM
+								? house.recordset[0].F_AOMBLID
+								: ""
+						}'`
+					);
+				res.json({
+					Main: result.recordset[0],
+					Detail: detail.recordset,
+					Bill: billto.recordset[0],
+					Ship: shipto.recordset[0],
+					House: house.recordset[0],
+					Master: master.recordset[0],
+				});
+			} else {
+				res.json({
+					Main: result.recordset[0],
+					Detail: detail.recordset,
+					Bill: billto.recordset[0],
+					Ship: shipto.recordset[0],
+					House: house.recordset[0],
+					Master: [],
+				});
+			}
 		} catch (err) {
 			res.json(err);
 		}

@@ -47,26 +47,17 @@ export default function page(props) {
 		{ label: props.refNo, path: "/shipment/1", active: true },
 	];
 	const [selectedNav, setSelectedNav] = useState(1);
-	const { data } = useSWR(`/api/shipment/${props.refNo}`, fetcher);
+	var isQuery = props.Type.hasOwnProperty("q");
+	const { data } = useSWR(
+		`/api/shipment/${props.refNo}?q=${props.Type.q}`,
+		fetcher
+	);
 
 	// useEffect(() => {
-	// 	console.log(data);
+	// 	if (data) {
+	// 		console.log(data.master.F_FETA);
+	// 	}
 	// }, []);
-
-	const project = {
-		title: "PO#123",
-		shortDesc:
-			"This card has supporting text below as a natural lead-in to additional content is a little bit longer",
-		state: "Ongoing",
-		totalTasks: 81,
-		totalComments: 103,
-		totalMembers: 6,
-		startDate: "17 March 2018",
-		startTime: "1:00 PM",
-		endDate: "22 December 2018",
-		endTime: "1:00 PM",
-		totalBudget: "$15,800",
-	};
 
 	return (
 		<div>
@@ -79,7 +70,7 @@ export default function page(props) {
 				<PageTitle breadCrumbItems={current} title={props.refNo || ""} />
 				{!data ? (
 					<Loader />
-				) : data.length === 0 ? (
+				) : data.length === 0 || !props.Type.hasOwnProperty("q") ? (
 					<Alert color="danger">{props.refNo} IS NOT FOUND</Alert>
 				) : (
 					<Row>
@@ -106,15 +97,20 @@ export default function page(props) {
 											</DropdownItem>
 										</DropdownMenu>
 									</UncontrolledDropdown>
-
+									{/* {ga.F_ExpRefNo || ga.F_CustRefNo || ga.F_ExPref} */}
 									<h3 className="mt-0">
-										{(data && data[0].F_CustRefNo) || "PO# UNDEFINED"}
+										{(data.master && data.master.F_CustRefNo) ||
+											data.house.map(
+												(ga) =>
+													ga.F_CustRefNo || ga.F_ExPref || ga.F_ExpRefNo || ""
+											) ||
+											"PO# UNDEFINED"}
 									</h3>
 
 									<Nav tabs className="nav-bordered mb-3">
 										<NavItem>
 											<NavLink
-												className={selectedNav == 1 && "active"}
+												className={selectedNav == 1 ? "active" : "inactive"}
 												onClick={() => setSelectedNav(1)}
 												style={{ cursor: "pointer" }}
 											>
@@ -123,7 +119,7 @@ export default function page(props) {
 										</NavItem>
 										<NavItem>
 											<NavLink
-												className={selectedNav == 2 && "active"}
+												className={selectedNav == 2 ? "active" : "inactive"}
 												onClick={() => setSelectedNav(2)}
 												style={{ cursor: "pointer" }}
 											>
@@ -132,7 +128,7 @@ export default function page(props) {
 										</NavItem>
 										<NavItem>
 											<NavLink
-												className={selectedNav == 3 && "active"}
+												className={selectedNav == 3 ? "active" : "inactive"}
 												onClick={() => setSelectedNav(3)}
 												style={{ cursor: "pointer" }}
 											>
@@ -141,38 +137,46 @@ export default function page(props) {
 										</NavItem>
 									</Nav>
 
-									{/* <div className="badge badge-secondary mb-3">
-                  {project.state}
-                </div> */}
 									{selectedNav == 1 && (
 										<React.Fragment>
 											<h5 className="mb-2">Project Overview:</h5>
-
 											<Row>
 												<Col md={3}>
 													<div className="mb-4">
-														<h5>MBL</h5>
+														<h5>MASTER B/L</h5>
 														<p>
-															{data[0].F_MBLNo}
-															{/* <small className="text-muted">
-														{project.startTime}
-													</small> */}
+															{data.master.F_MBLNo ||
+																data.master.F_SMBLNo ||
+																data.master.F_MawbNo}
 														</p>
 													</div>
 												</Col>
-												<Col md={3}>
+												{/* <Col md={3}>
 													<div className="mb-4">
 														<h5>VOLUME</h5>
 														<p>
 															{data.reduce((a, b) => a + (b.F_CBM || 0), 0)} CBM
 														</p>
 													</div>
-												</Col>
+												</Col> */}
 												<Col md={3}>
 													<div className="mb-4 text-uppercase">
 														<h5>WEIGHT</h5>
 														<p>
-															{data.reduce((a, b) => a + (b.F_KGS || 0), 0)} KG
+															{isQuery &&
+																(props.Type.q === "OIM" ||
+																	props.Type.q === "OEX") &&
+																`${data.house.reduce(
+																	(a, b) => a + (b.F_KGS || 0),
+																	0
+																)} KG`}
+															{isQuery &&
+																(props.Type.q === "AEX" ||
+																	props.Type.q === "AIM") &&
+																`${data.house.reduce(
+																	(a, b) => a + (b.F_ChgWeight || 0),
+																	0
+																)} KG`}
 														</p>
 													</div>
 												</Col>
@@ -180,57 +184,85 @@ export default function page(props) {
 													<div className="mb-4 text-uppercase">
 														<h5>VESSEL</h5>
 														<p>
-															{data[0].F_Vessel} {data[0].F_Voyage}
+															{data.master.F_Vessel ||
+																data.master.F_FLTno ||
+																data.master.F_FLTNo}{" "}
+															{data.master.F_Voyage}
 														</p>
+													</div>
+												</Col>
+												<Col md={3}>
+													<div className="mb-4 text-uppercase">
+														<h5>CONTAINER</h5>
+														<p>{data.container.length}</p>
 													</div>
 												</Col>
 											</Row>
 
-											<div className="mb-2">
-												<b>CONSIGNEE</b>: {data[0].F_CName}
+											{/* <div className="mb-2">
+												<b>CONSIGNEE</b>: {data.master.F_CName}
 											</div>
 											<div className="mb-2">
-												<b>NOTIFY</b>: {data[0].F_NName}
+												<b>NOTIFY</b>: {data.master.F_NName}
 											</div>
 											<div className="mb-2">
-												<b>SHIPPER</b>: {data[0].F_SName}
-											</div>
-											{/* <code className="text-muted mb-2">
-												{JSON.stringify(data)}
-											</code> */}
+												<b>SHIPPER</b>: {data.master.F_SName}
+											</div> */}
 										</React.Fragment>
 									)}
 									{selectedNav == 2 && (
 										<React.Fragment>
-											<Card>
-												<CardBody>
-													<h5 className="card-title mb-3">Details</h5>
+											<h5 className="card-title mb-2">Details</h5>
 
-													{data &&
-														data.map((ga) => (
-															<Row>
-																<Col md={4}>
-																	<div className="mb-4">
-																		<h5>MBL</h5>
-																		<p>{ga.F_HBLNo}</p>
-																	</div>
-																</Col>
-																<Col md={4}>
-																	<div className="mb-4">
-																		<h5>PACKAGES</h5>
-																		<p>{ga.F_PKGS}</p>
-																	</div>
-																</Col>
-																<Col md={4}>
-																	<div className="mb-4">
-																		<h5>CONTAINER</h5>
-																		<p>{ga.F_SelectContainer}</p>
-																	</div>
-																</Col>
-															</Row>
-														))}
-												</CardBody>
-											</Card>
+											{data.house.map((ga) => (
+												<Row key={ga.F_ID}>
+													<Col md={3}>
+														<div className="mb-4">
+															<h5>HOUSE B/L</h5>
+															<p>{ga.F_HBLNo || ga.F_HawbNo || ga.F_HAWBNo}</p>
+														</div>
+													</Col>
+													<Col md={3}>
+														<div className="mb-4">
+															<h5>REF</h5>
+															<p>
+																{ga.F_ExpRefNo || ga.F_CustRefNo || ga.F_ExPref}
+															</p>
+														</div>
+													</Col>
+													<Col md={4}>
+														<div className="mb-4">
+															<h5>PACKAGES</h5>
+															<p>
+																{ga.F_PKGS || ga.F_Pkgs}{" "}
+																{ga.F_PUnit || ga.F_Punit}
+															</p>
+														</div>
+													</Col>
+												</Row>
+											))}
+											{data.container.map((ga) => (
+												<Row key={ga.F_ID}>
+													<Col md={4}>
+														<div className="mb-4">
+															<h5>CONTAINER NUMBER</h5>
+															<p>{ga.F_ContainerNo}</p>
+														</div>
+													</Col>
+													<Col md={4}>
+														<div className="mb-4">
+															<h5>TYPE</h5>
+															<p>{ga.F_ConType}</p>
+														</div>
+													</Col>
+													<Col md={4}>
+														<div className="mb-4">
+															<h5>SEAL</h5>
+															<p>{ga.F_SealNo}</p>
+														</div>
+													</Col>
+												</Row>
+											))}
 										</React.Fragment>
 									)}
 									{selectedNav == 3 && (
@@ -273,8 +305,6 @@ export default function page(props) {
 											</Card>
 										</React.Fragment>
 									)}
-
-									{/* <TeamMembers /> */}
 								</CardBody>
 							</Card>
 							<Comments />
@@ -288,72 +318,153 @@ export default function page(props) {
 									<SimpleBar style={{ maxHeight: "430px", width: "100%" }}>
 										<div className="timeline-alt pb-0">
 											<div className="timeline-item">
-												<i className="mdi mdi-anchor bg-info-lighten text-info timeline-icon"></i>
+												<i
+													className={`mdi mdi-anchor timeline-icon ${
+														moment(data.master.F_ETD)
+															.utc()
+															.isSameOrAfter(moment())
+															? "bg-info-lighten text-info"
+															: "bg-secondary-lighten text-secondary"
+													}`}
+												></i>
 												<div className="timeline-item-info">
 													<a
 														href="#"
-														className="text-info font-weight-bold mb-1 d-block"
+														className={`${
+															moment(data.master.F_ETD)
+																.utc()
+																.isSameOrAfter(moment())
+																? "text-info"
+																: "text-secondary"
+														} font-weight-bold mb-1 d-block`}
 													>
-														{data[0].F_LoadingPort}
+														{data.master && data.master.F_LoadingPort}
 													</a>
 													<small>
 														<span className="font-weight-bold">
-															{moment(data[0].F_ETD).utc().format("l")}
+															{data.master &&
+																moment(data.master.F_ETD).utc().format("l")}
 														</span>
 													</small>
 													<p className="mb-0 pb-2">
 														<small className="text-muted">
-															{moment(data[0].F_ETD).utc().fromNow()}
+															{data.master &&
+																moment(data.master.F_ETD).utc().fromNow()}
 														</small>
 													</p>
 												</div>
 											</div>
 
 											<div className="timeline-item">
-												<i className="mdi mdi-ferry bg-primary-lighten text-primary timeline-icon"></i>
+												<i
+													className={`mdi mdi-ferry timeline-icon ${
+														moment(data.master.F_ETA)
+															.utc()
+															.isSameOrAfter(moment())
+															? "bg-primary-lighten text-primary"
+															: "bg-secondary-lighten text-secondary"
+													}`}
+												></i>
 												<div className="timeline-item-info">
 													<a
 														href="#"
-														className="text-primary font-weight-bold mb-1 d-block"
+														className={`${
+															moment(data.master.F_ETA)
+																.utc()
+																.isSameOrAfter(moment())
+																? "text-primary"
+																: "text-secondary"
+														} font-weight-bold mb-1 d-block`}
 													>
-														<span>{data[0].F_DisCharge}</span>{" "}
+														<span>
+															{data.master.F_DisCharge ||
+																data.master.F_Discharge}
+														</span>{" "}
 													</a>
 													<small>
 														<span className="font-weight-bold">
-															{moment(data[0].F_ETA).utc().format("l")}
+															{moment(data.master.F_ETA).utc().format("l")}
 														</span>
 													</small>
 													<p className="mb-0 pb-2">
 														<small className="text-muted">
-															{moment(data[0].F_ETA).utc().fromNow()}
+															{moment(data.master.F_ETA).utc().fromNow()}
 														</small>
 													</p>
 												</div>
 											</div>
-
-											<div className="timeline-item">
-												<i className="mdi mdi-airplane bg-info-lighten text-info timeline-icon"></i>
-												<div className="timeline-item-info">
-													<a
-														href="#"
-														className="text-info font-weight-bold mb-1 d-block"
-													>
-														<span>{data[0].F_FinalDest[0]}</span>
-													</a>
-													<small>
-														<span className="font-weight-bold">
-															{moment(data[0].F_FETA[0]).utc().format("l")}
-														</span>
-													</small>
-													<p className="mb-0 pb-2">
-														<small className="text-muted">
-															{moment(data[0].F_FETA[0]).utc().fromNow()}
+											{(data.master.F_FinalDest ||
+												data.house[0].F_FinalDest) && (
+												<div className="timeline-item">
+													{/* data.house[0].F_FinalDest */}
+													<i
+														className={`mdi mdi-airplane timeline-icon ${
+															data.house.length
+																? moment(data.house[0].F_FETA)
+																		.utc()
+																		.isSameOrAfter(moment())
+																	? "bg-primary-lighten text-primary"
+																	: "bg-secondary-lighten text-secondary"
+																: moment(data.master.F_FETA)
+																		.utc()
+																		.isSameOrAfter(moment())
+																? "bg-primary-lighten text-primary"
+																: "bg-secondary-lighten text-secondary"
+														}`}
+													></i>
+													<div className="timeline-item-info">
+														<a
+															href="#"
+															className={`font-weight-bold mb-1 d-block ${
+																data.house.length
+																	? moment(data.house[0].F_FETA)
+																			.utc()
+																			.isSameOrAfter(moment())
+																		? "text-primary"
+																		: "text-secondary"
+																	: moment(data.master.F_FETA)
+																			.utc()
+																			.isSameOrAfter(moment())
+																	? "text-primary"
+																	: "text-secondary"
+															}`}
+														>
+															<span>
+																{/* {data.master && data.master.F_FinalDest} */}
+																{data.house.length
+																	? data.house[0].F_FinalDest
+																	: data.master.F_FinalDest}
+															</span>
+														</a>
+														<small>
+															<span className="font-weight-bold">
+																{/* {data.master.F_FETA
+																	? moment(data.master.F_FETA).utc().format("l")
+																	: ""} */}
+																{data.house.length
+																	? moment(data.house[0].F_FETA)
+																			.utc()
+																			.format("l")
+																	: moment(data.master.F_FETA)
+																			.utc()
+																			.format("l")}
+															</span>
 														</small>
-													</p>
+														<p className="mb-0 pb-2">
+															<small className="text-muted">
+																{/* {data.master.F_FETA
+																	? moment(data.master.F_FETA).utc().fromNow()
+																	: ""} */}
+																{data.house.length
+																	? moment(data.house[0].F_FETA).utc().fromNow()
+																	: moment(data.master.F_FETA).utc().fromNow()}
+															</small>
+														</p>
+													</div>
 												</div>
-											</div>
+											)}
 
-											<div className="timeline-item">
+											{/* <div className="timeline-item">
 												<i className="mdi mdi-truck-check bg-primary-lighten text-primary timeline-icon"></i>
 												<div className="timeline-item-info">
 													<a
@@ -373,52 +484,12 @@ export default function page(props) {
 														</small>
 													</p>
 												</div>
-											</div>
+											</div> */}
 										</div>
 									</SimpleBar>
 								</CardBody>
 							</Card>
-							{/* <Card className="d-block">
-								<CardBody>
-									<h4 className="mt-0 mb-3">Route Detail</h4>
-									<ul className="vertical-steps">
-										<li className="step-item is-done">
-											<span>{data[0].F_LoadingPort}</span>
-											<br />
-											<span>
-												Depatrue:{" "}
-												<strong>
-													{moment(data[0].F_ETD).utc().format("l")}
-												</strong>
-											</span>
-										</li>
-
-										<li className="step-item current">
-											<span>{data[0].F_DisCharge}</span>
-											<br />
-											<span>
-												Arrival:{" "}
-												<strong>
-													{moment(data[0].F_ETA).utc().format("l")}
-												</strong>
-											</span>
-										</li>
-
-										<li className="step-item">
-											<span>{data[0].F_FinalDest[0]}</span>
-											<br />
-											<span>
-												Delivery:{" "}
-												<strong>
-													{moment(data[0].F_FETA[0]).utc().format("l")}
-												</strong>
-											</span>
-										</li>
-									</ul>
-								</CardBody>
-							</Card> */}
-							{/* <ProgressChart /> */}
-							{/* <Files /> */}
+							{/* <code>{JSON.stringify(data)}</code> */}
 						</Col>
 					</Row>
 				)}
@@ -436,6 +507,7 @@ export async function getServerSideProps({ req, query }) {
 			props: {
 				token,
 				refNo: query.id,
+				Type: query,
 			},
 		};
 	} catch (err) {

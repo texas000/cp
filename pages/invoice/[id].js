@@ -68,9 +68,57 @@ export default function page(props) {
 										<Col sm={6}>
 											<div className="float-left mt-3">
 												<p>
-													<b>Hello, Customer</b>
+													<b>REF NUM: {invoice.Master.F_RefNo}</b>
 												</p>
-												<p className="text-muted font-13">Note Here</p>
+												<p className="text-muted font-13 my-1">
+													CUST REF: {invoice.Main.F_YourRef}
+												</p>
+												<p className="text-muted font-13 my-1">
+													MASTER BL:{" "}
+													{invoice.Master.F_MBLNo ||
+														invoice.Master.F_MawbNo ||
+														invoice.Master.F_SMBLNo}
+												</p>
+												<p className="text-muted font-13 my-1">
+													HOUSE BL:{" "}
+													{invoice.House.F_HBLNo ||
+														invoice.House.F_HawbNo ||
+														invoice.House.F_HAWBNo}
+												</p>
+												<p className="text-muted font-13 my-1">
+													VEESEL NO:{" "}
+													{invoice.Master.F_Vessel ||
+														invoice.Master.F_FLTno ||
+														invoice.Master.F_FLTNo}{" "}
+													{invoice.Master.F_Voyage}
+												</p>
+												<p className="text-muted font-13 my-1">
+													POL:{" "}
+													{`${invoice.Master.F_LoadingPort} / ${moment(
+														invoice.Master.F_ETD
+													)
+														.utc()
+														.format("LL")}`}
+												</p>
+												<p className="text-muted font-13 my-1">
+													POD:{" "}
+													{`${
+														invoice.Master.F_DisCharge ||
+														invoice.Master.F_Discharge
+													} / ${moment(invoice.Master.F_ETA)
+														.utc()
+														.format("LL")}`}
+												</p>
+												{invoice.Master.F_FinalDest && (
+													<p className="text-muted font-13 my-1">
+														DEST:{" "}
+														{`${invoice.Master.F_FinalDest} / ${moment(
+															invoice.Master.F_FETA
+														)
+															.utc()
+															.format("LL")}`}
+													</p>
+												)}
 											</div>
 										</Col>
 
@@ -106,11 +154,8 @@ export default function page(props) {
 												<br />
 												{invoice.Bill.F_City}
 												<br />
-												{invoice.Bill.F_State}, {invoice.Bill.F_ZipCode}{" "}
+												{invoice.Bill.F_State} {invoice.Bill.F_ZipCode}{" "}
 												{invoice.Bill.F_Country}
-												<br />
-												{/* <abbr title="Phone">P:</abbr>{" "}
-												{.phone} */}
 											</address>
 										</Col>
 										<Col sm={4}>
@@ -123,9 +168,6 @@ export default function page(props) {
 												<br />
 												{invoice.Ship.F_State} {invoice.Ship.F_ZipCode}
 												{invoice.Ship.F_Country}
-												<br />
-												{/* <abbr title="Phone">P:</abbr>{" "}
-												{.phone} */}
 											</address>
 										</Col>
 									</Row>

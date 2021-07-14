@@ -1,7 +1,7 @@
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import Layout from "../components/Layout";
-import PageTitle from "../components/PageTitle";
+import Layout from "../../components/Layout";
+import PageTitle from "../../components/PageTitle";
 import {
 	Row,
 	Col,
@@ -14,9 +14,14 @@ import {
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import useSWR from "swr";
+import Link from "next/link";
+import { useEffect } from "react";
 
 export default function page(props) {
 	// const { data } = useSWR("/api/photo/getPhoto");
+	// useEffect(() => {
+	// 	console.log(cities);
+	// }, []);
 	const router = useRouter();
 	var current = [
 		{
@@ -44,7 +49,9 @@ export default function page(props) {
 									Get an instant quotation for ocean shipment
 								</CardSubtitle>
 								{/* <image src="http://localhost:8080/api/photo/getPhoto" /> */}
-								<button className="btn btn-primary mt-4">Continue</button>
+								<Link href="/quote/request">
+									<button className="btn btn-primary mt-4">Continue</button>
+								</Link>
 							</CardBody>
 						</Card>
 					</Col>

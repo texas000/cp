@@ -33,8 +33,18 @@ export default function page(props) {
 		return (
 			<Row className="justify-content-sm-between mt-2">
 				<Col sm={4} className="mb-2 mb-sm-0">
-					<p className="font-weight-bold">In transit to final destination</p>
-					<p>Delivery Date: 2 days ago</p>
+					<p className="font-weight-bold mb-1">
+						[AUTO STATUS]{" "}
+						{moment(data.F_ETA).utc().isSameOrAfter(moment())
+							? "ON SHIP"
+							: "DELIVERED"}
+					</p>
+					<p className="font-weight-bold mb-1">{data.F_CUST}</p>
+					<p>
+						{moment(data.F_ETA).utc().isSameOrAfter(moment())
+							? `Estimated Delivery ${moment(data.F_ETA).utc().fromNow()}`
+							: `Delivered at ${moment(data.F_ETA).utc().format("l")}`}
+					</p>
 					{/* <small>2 Containers</small> */}
 				</Col>
 				<Col sm={8}>
@@ -47,14 +57,17 @@ export default function page(props) {
 									title=""
 									data-original-title="20/08/2018 07:24 PM"
 								>
-									<small>Loading Port</small>
+									<small>
+										Loading Port {moment(data.F_ETD).utc().fromNow()}
+									</small>
 									<br />
 									<small
 										className="d-inline-block text-truncate"
 										style={{ maxWidth: "100px" }}
 									>
-										{data.F_LoadingPort}
+										{data.F_LOADING}
 									</small>
+									<br />
 								</span>
 							</div>
 							<div className="step-item">
@@ -64,25 +77,52 @@ export default function page(props) {
 									title=""
 									data-original-title="21/08/2018 11:32 AM"
 								>
-									<small>Discharge Port</small>
+									<small>
+										Discharge Port {moment(data.F_ETA).utc().fromNow()}
+									</small>
 									<br />
-									<small>{data.F_DisCharge}</small>
+									<small>{data.F_DISCHARGE}</small>
 								</span>
 							</div>
-							<div className="step-item current">
-								<span>
-									<small>Destination</small>
-									<br />
-									<small>{data.F_FinalDest}</small>
-								</span>
-							</div>
-							<div className="step-item">
+							{data.Type === "OIM" && (
+								<div
+									className={`step-item ${
+										moment(data.F_FETA).isBefore(moment())
+											? "current"
+											: "active"
+									}`}
+								>
+									<span>
+										<small>
+											Destination {moment(data.F_FETA).utc().fromNow()}
+										</small>
+										<br />
+										<small>{data.F_FINAL}</small>
+									</span>
+								</div>
+							)}
+							{/* <div className="step-item">
 								<span>
 									<small>Delivered</small>
 								</span>
-							</div>
+							</div> */}
 						</div>
-						<div className="process-line" style={{ width: "66%" }}></div>
+						<div
+							className="process-line"
+							style={
+								data.Type === "OIM"
+									? moment(data.F_FETA).utc().isBefore(moment())
+										? { width: "100%" }
+										: moment(data.F_ETA).utc().isBefore(moment())
+										? { width: "66%" }
+										: moment(data.F_ETD).utc().isBefore(moment())
+										? { width: "22%" }
+										: { width: "10%" }
+									: moment(data.F_ETA).utc().isBefore(moment())
+									? { width: "100%" }
+									: { width: "66%" }
+							}
+						></div>
 					</div>
 					{/* <Row>
 						<Col>
@@ -243,8 +283,8 @@ export default function page(props) {
 				) : shipment.length == 0 ? (
 					<Alert color="danger">No shipment is avaiable</Alert>
 				) : (
-					shipment.map((ga) => (
-						<Row key={ga.F_ID}>
+					shipment.map((ga, i) => (
+						<Row key={i}>
 							<Col>
 								<h5 className="m-0 pb-2" onClick={toggle}>
 									<i className="uil-angle-down"></i>
@@ -252,7 +292,7 @@ export default function page(props) {
 									{ga.F_CustRefNo}
 								</h5>
 								<Collapse isOpen={collapse}>
-									<Link href={`/shipment/${ga.F_RefNo}`}>
+									<Link href={`/shipment/${ga.F_RefNo}?q=${ga.Type}`}>
 										<Card className="card-shipment">
 											<CardBody className="pb-1 pt-2">
 												<CaseDetail data={ga} />

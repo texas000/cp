@@ -64,14 +64,28 @@ const Invoice = ({ data }) => {
 														{ga.F_InvoiceNo}
 													</a>
 												</h5>
-												<span className="text-danger font-13">
-													<i className="mdi mdi-credit-card"></i> Invoice
-													Overdue
+												<span
+													className={`${
+														moment(ga.F_DueDate).isBefore()
+															? "text-danger font-13"
+															: "font-13"
+													}`}
+												>
+													<i className="mdi mdi-credit-card mr-1"></i>
+													{moment(ga.F_DueDate).isBefore()
+														? "Invoice Overdue"
+														: "Invoice Due"}
 												</span>
 											</td>
 											<td>
 												<br />
-												<span className="text-danger font-13">
+												<span
+													className={`${
+														moment(ga.F_DueDate).isBefore()
+															? "text-danger"
+															: "text-muted"
+													} font-13`}
+												>
 													{moment(ga.F_DueDate).utc().fromNow()}
 												</span>
 											</td>

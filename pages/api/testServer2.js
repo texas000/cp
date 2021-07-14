@@ -31,9 +31,9 @@ export default async function handler(req, res) {
 			// GET RESULT FROM SQL QUERY
 			let result = await pool
 				.request()
-				.query(`SELECT TOP 10 * FROM T_OIHMAIN WHERE F_CustRefNo='EXP ELO 18'`);
+				.query(`select * from T_OIMMAIN as M where F_RefNo='OIM-44484';`);
 			// SEND RESULT
-			res.json(result.recordset);
+			res.json({ master: result.recordset[0], house: house.recordset });
 		} catch (err) {
 			// IF ERROR, SEND ERROR - POSSIBLE ERROR: BAD QUERY
 			res.status(400).json(err);

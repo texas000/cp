@@ -34,13 +34,13 @@ export default function Index(props) {
 					title={"Dashboard"}
 				/>
 				<div className="row">
-					<div className="col-lg-4">
+					<div className="col-lg-6">
 						<Shipment data={shipment} />
 					</div>
-					<div className="col-lg-4">
+					{/* <div className="col-lg-4">
 						<Quotes />
-					</div>
-					<div className="col-lg-4">
+					</div> */}
+					<div className="col-lg-6">
 						<Invoice data={invoice} />
 					</div>
 				</div>

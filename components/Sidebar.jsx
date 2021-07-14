@@ -12,14 +12,6 @@ export default function Sidebar (props) {
       </li>
     );
   };
-
-  // const MenuItem = React.forwardRef((props, ref) => 
-  //     <Link href={props.item.path} ref={ref}>
-  //     <li  className="side-nav-item">
-  //       <MenuItemLink item={props.item} />
-  //     </li>
-  //     </Link>
-  //   )
   
   const MenuItemLink = ({ item }) => {
     return (
@@ -68,13 +60,28 @@ export default function Sidebar (props) {
     //   icon: "uil-lock",
     //   admin: false,
     // },
+    // {
+    //   name: "Customers",
+    //   path: "/customers",
+    //   icon: "uil-user-square",
+    //   admin: !props.token.admin,
+    // },
+  ];
+
+  const admins = [
     {
       name: "Customers",
       path: "/customers",
       icon: "uil-user-square",
       admin: !props.token.admin,
     },
-  ];
+    {
+      name: "Quotes",
+      path: "/quotes",
+      icon: "uil-parcel",
+      admin: !props.token.admin,
+    },
+  ]
 
   function SideBarContent() {
     return (
@@ -92,6 +99,10 @@ export default function Sidebar (props) {
         <li className="side-nav-title side-nav-item mm-active">Apps</li>
         {apps.map((app, i) => (
           <MenuItem item={app} key={i} />
+        ))}
+        {props.token.admin!=0 && <li className="side-nav-title side-nav-item mm-active">Tools</li>}
+        {props.token.admin!=0 && admins.map((app, i)=> (
+          <MenuItem item={app} key={i+'admin'} />
         ))}
       </ul>
     );

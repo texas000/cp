@@ -178,7 +178,6 @@ export default function page(props) {
 												<table className="table mt-4">
 													<thead>
 														<tr>
-															<th>#</th>
 															<th>Item</th>
 															<th>Quantity</th>
 															<th>Unit Cost</th>
@@ -190,7 +189,6 @@ export default function page(props) {
 															invoice.Detail.map((item, idx) => {
 																return (
 																	<tr key={idx}>
-																		<td>{item.F_ID}</td>
 																		<td>
 																			<b>{item.F_Description}</b>
 																		</td>

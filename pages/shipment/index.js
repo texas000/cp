@@ -42,7 +42,9 @@ export default function page(props) {
 					<p className="font-weight-bold mb-1">{data.F_CUST}</p>
 					<p>
 						{moment(data.F_ETA).utc().isSameOrAfter(moment())
-							? `Estimated Delivery ${moment(data.F_ETA).utc().fromNow()}`
+							? `Estimated Delivery ${moment(data.F_ETA)
+									.add("days", 1)
+									.fromNow()}`
 							: `Delivered at ${moment(data.F_ETA).utc().format("l")}`}
 					</p>
 					{/* <small>2 Containers</small> */}
@@ -58,7 +60,7 @@ export default function page(props) {
 									data-original-title="20/08/2018 07:24 PM"
 								>
 									<small>
-										Loading Port {moment(data.F_ETD).utc().fromNow()}
+										Loading Port {moment(data.F_ETD).add("days", 1).fromNow()}
 									</small>
 									<br />
 									<small
@@ -78,7 +80,7 @@ export default function page(props) {
 									data-original-title="21/08/2018 11:32 AM"
 								>
 									<small>
-										Discharge Port {moment(data.F_ETA).utc().fromNow()}
+										Discharge Port {moment(data.F_ETA).add("days", 1).fromNow()}
 									</small>
 									<br />
 									<small>{data.F_DISCHARGE}</small>
@@ -94,7 +96,7 @@ export default function page(props) {
 								>
 									<span>
 										<small>
-											Destination {moment(data.F_FETA).utc().fromNow()}
+											Destination {moment(data.F_FETA).add("days", 1).fromNow()}
 										</small>
 										<br />
 										<small>{data.F_FINAL}</small>

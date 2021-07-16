@@ -72,84 +72,102 @@ const ProfileMenus = [
   {
     label: "My Account",
     icon: "uil uil-user",
-    redirectTo: "/",
+    redirectTo: "/profile",
+    class: 'active'
   },
   {
     label: "Settings",
     icon: "uil uil-cog",
     redirectTo: "/",
+    class: 'disabled'
   },
   {
     label: "Support",
     icon: "uil uil-life-ring",
     redirectTo: "/",
+    class: 'disabled'
   },
   {
     label: "Lock Screen",
     icon: "uil uil-lock-alt",
     redirectTo: "/",
+    class: 'disabled'
   },
   {
     label: "Logout",
     icon: "uil uil-exit",
     redirectTo: "/login",
+    class: 'active'
   },
 ];
 
 const SearchResults = [
   {
     id: 1,
-    title: "Analytics Report",
+    title: "Shipment List",
     icon: "uil-notes",
-    redirectTo: "/",
+    redirectTo: "/shipment",
   },
   {
     id: 2,
-    title: "How can I help you?",
+    title: "Invoice List",
     icon: "uil-life-ring",
-    redirectTo: "/",
+    redirectTo: "/invoice",
   },
   {
     id: 3,
     icon: "uil-cog",
-    title: "User profile settings",
-    redirectTo: "/",
+    title: "Chat List",
+    redirectTo: "/chat",
   },
-  {
-    id: 4,
-    icon: "uil-user",
-    title: "Erwin Brown (UI)",
-    redirectTo: "/",
-  },
-  {
-    id: 5,
-    icon: "uil-user",
-    title: "Jacob Deo (Dev)",
-    redirectTo: "/",
-  },
+  // {
+  //   id: 4,
+  //   icon: "uil-user",
+  //   title: "Erwin Brown (UI)",
+  //   redirectTo: "/",
+  // },
+  // {
+  //   id: 5,
+  //   icon: "uil-user",
+  //   title: "Jacob Deo (Dev)",
+  //   redirectTo: "/",
+  // },
 ];
 
 export default function Topbar(props) {
-  const [searchClick, setSearchClick] = useState(false);
-  const [notiClick, setNotiClick] = useState(false);
-  const toggleSearch = () => setSearchClick((prevState) => !prevState);
+  const [searchValue, setSearchValue] = useState('');
+  const toggleSearch = () => setSearchValue('');
   const {data} = useSWR('/api/chat/getUnread')
+  const {data: searchResult} = useSWR(setSearchValue!='' ? `/api/search?q=${searchValue}`: null)
+
+  async function handleSearchSubmit(e) {
+    e.preventDefault();
+    console.log(e.target[0].value);
+  }
 
   function TopbarSearch() {
     return (
       <Dropdown
-        isOpen={searchClick}
+        isOpen={searchValue!=''}
         toggle={toggleSearch}
         className="app-search d-none d-lg-block"
       >
         <DropdownToggle tag="a" className="d-none"></DropdownToggle>
-        <form className="position-relative">
-          <div className="input-group">
+        <form className="position-relative" onSubmit={handleSearchSubmit}>
+          <div className="input-group" >
             <input
               className="form-control dropdown-toggle"
               placeholder="Search..."
               id="top-search"
-              onClick={toggleSearch}
+              value={searchValue}
+              type="text"
+              autoFocus={true}
+              autoComplete="off"
+              onChange={e=>{
+                var safeString = e.target.value.replace(/[^a-zA-Z0-9#]/g, '');
+                setSearchValue(safeString)
+              }}
+              // onClick={toggleSearch}
             />
             <span className="mdi mdi-magnify search-icon"></span>
             <div className="input-group-append">
@@ -162,26 +180,45 @@ export default function Topbar(props) {
             right
             className="dropdown-menu-animated topbar-dropdown-menu dropdown-lg"
           >
-            <div className="dropdown-header noti-title">
-              <h5 className="text-overflow mb-2">
-                Found{" "}
-                <span className="text-danger">{SearchResults.length}</span>{" "}
-                results
-              </h5>
-            </div>
-
             {SearchResults.map((item, i) => {
               return (
-                <a
-                  key={i}
+                <Link
+                key={i}
                   href={item.redirectTo}
+                >
+                <a
                   className="dropdown-item notify-item"
                 >
                   <i className={`font-16 mr-1 ${item.icon && item.icon}`}></i>
                   <span>{item.title}</span>
                 </a>
+                </Link>
               );
             })}
+
+            <div className="dropdown-header noti-title">
+              <h5 className="text-overflow mb-2">
+                Found{" "}
+                <span className="text-danger">{searchResult ? searchResult.length : '0' }</span>{" "}
+                results
+              </h5>
+            </div>
+
+            {searchResult && searchResult.map(ga=> (
+              <Link
+              key={ga.F_RefNo}
+              href={`/shipment/${ga.F_RefNo}?q=${ga.Type}`}
+              >
+              <a
+              className="dropdown-item notify-item text-truncate"
+              onClick={toggleSearch}
+            >
+              <i className={`font-16 mr-1 ${ga.Icon}`}></i>
+              <span>{ga.F_CustRefNo}</span>{" "}
+              <small className="text-secondary">({ga.F_RefNo})</small>
+            </a>
+              </Link>
+            ))}
           </DropdownMenu>
         </form>
       </Dropdown>
@@ -220,7 +257,7 @@ export default function Topbar(props) {
               return (
                 <a
                   href={item.redirectTo}
-                  className="dropdown-item notify-item"
+                  className={`dropdown-item notify-item ${item.class}`}
                   key={i + "-profile-menu"}
                 >
                   <i className={`${item.icon} mr-1`}></i>

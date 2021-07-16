@@ -41,7 +41,6 @@ export default async function handler(req, res) {
 						""
 					)}`
 				);
-			console.log(result.recordset);
 			// if user has the customer id, then save the name
 			userList.forEach((ga, i) => {
 				var companyName = result.recordset.find(

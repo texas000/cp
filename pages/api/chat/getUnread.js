@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 					(SELECT photoURL from [dbo].[USER] where M.CREATOR_ID=uid) AS PHOTO
 						FROM [dbo].[MESSAGE_RECIPIENT] AS R
 						LEFT JOIN [MESSAGE] AS M ON M.ID=R.MESSAGE_ID 
-						WHERE R.RECIPIENT_ID='${token.uid}'`
+						WHERE R.RECIPIENT_ID='${token.uid}' ORDER BY M.ID DESC`
 			);
 			// `SELECT *, (SELECT displayName FROM [dbo].[USER] where [uid]=[CREATOR_ID]) AS NAME, (SELECT photoURL FROM [dbo].[USER] where [uid]=[CREATOR_ID]) AS PHOTO FROM [dbo].[MESSAGE];`
 			res.json(result.recordset);

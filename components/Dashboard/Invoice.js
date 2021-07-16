@@ -44,7 +44,7 @@ const Invoice = ({ data }) => {
 				<h4 className="header-title mb-3">Invoice</h4>
 
 				<p>
-					<b>107</b> Tasks completed out of 195
+					<b>{data && data.length}</b> pending invoices
 				</p>
 				{!data ? (
 					<Loader />

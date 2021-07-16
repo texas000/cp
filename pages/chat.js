@@ -23,7 +23,9 @@ const Loader = () => (
 	</div>
 );
 export default function page(props) {
-	const [selectedUser, setSelectedUser] = useState(false);
+	const [selectedUser, setSelectedUser] = useState(
+		"p7ixY3zCjOQ0Kq67ABHqySvhQVh2"
+	);
 	const { data } = useSWR(
 		selectedUser ? `/api/chat/getMessage?user=${selectedUser}` : null,
 		{
@@ -39,7 +41,9 @@ export default function page(props) {
 	];
 	const [msg, setMsg] = useState("");
 
-	useEffect(() => {}, []);
+	// useEffect(() => {
+	// 	console.log(selectedUser);
+	// }, [selectedUser]);
 
 	const sendMessage = async () => {
 		if (!selectedUser) {

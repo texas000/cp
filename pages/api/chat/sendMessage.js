@@ -29,7 +29,7 @@ export default async function handler(req, res) {
                         ,[CREATE_DATE]
                         ,[EXPIRY_DATE]
                         ,[IS_REMINDER]
-                        ,[REMINDER_FREQUENCY_ID]) VALUES ('SUBJECT', '${message.uid}', '${message.msg}', GETDATE(), '2021-12-30', '0', '1');
+                        ,[REMINDER_FREQUENCY_ID]) VALUES ('SUBJECT', '${message.uid}', N'${message.msg}', GETDATE(), '2021-12-30', '0', '1');
 				INSERT INTO [dbo].[MESSAGE_RECIPIENT] ([RECIPIENT_ID], [MESSAGE_ID], [IS_READ]) VALUES('${recipient}',@@IDENTITY, 0);`
 			);
 			res.json(result);

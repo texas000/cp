@@ -349,7 +349,10 @@ export default function page(props) {
 													<p className="mb-0 pb-2">
 														<small className="text-muted">
 															{data.master &&
-																moment(data.master.F_ETD).utc().fromNow()}
+																moment(data.master.F_ETD)
+																	.add("days", 1)
+																	.utc()
+																	.fromNow()}
 														</small>
 													</p>
 												</div>
@@ -388,7 +391,9 @@ export default function page(props) {
 													</small>
 													<p className="mb-0 pb-2">
 														<small className="text-muted">
-															{moment(data.master.F_ETA).utc().fromNow()}
+															{moment(data.master.F_ETA)
+																.add("days", 1)
+																.fromNow()}
 														</small>
 													</p>
 												</div>
@@ -452,12 +457,13 @@ export default function page(props) {
 														</small>
 														<p className="mb-0 pb-2">
 															<small className="text-muted">
-																{/* {data.master.F_FETA
-																	? moment(data.master.F_FETA).utc().fromNow()
-																	: ""} */}
 																{data.house.length
-																	? moment(data.house[0].F_FETA).utc().fromNow()
-																	: moment(data.master.F_FETA).utc().fromNow()}
+																	? moment(data.house[0].F_FETA)
+																			.add("days", 1)
+																			.fromNow()
+																	: moment(data.master.F_FETA)
+																			.add("days", 1)
+																			.fromNow()}
 															</small>
 														</p>
 													</div>

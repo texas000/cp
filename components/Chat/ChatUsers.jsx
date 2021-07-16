@@ -71,7 +71,7 @@ export default function ChatUsers(props) {
                   )
                 })
               }
-              {users.map((user, index) => {
+              {/* {users.map((user, index) => {
                 return (
                   <a href="#" key={index} className="text-body" onClick={()=>props.setSelectedUser(user.id)}>
                     <Media className={`mt-1 p-2 ${props.selectedUser===user.id && 'bg-light'}`}>
@@ -103,7 +103,7 @@ export default function ChatUsers(props) {
                     </Media>
                   </a>
                 );
-              })}
+              })} */}
             </SimpleBar>
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function ChatUsers(props) {
   );
 }
 
-const cpusers = [{"uid":"RSaLEB9SuQSpBSl9Ow5AV4hZ0Iz1","created":"2021-07-06T10:41:00.000Z","customer":0,"email":"user2@example.com","photoURL":"https://www.mobafire.com/images/champion/square/shaco.png","signIn":"2021-07-06T10:41:00.000Z","displayName":"Shaco Kim","admin":0},{"uid":"p7ixY3zCjOQ0Kq67ABHqySvhQVh2","created":"2021-06-01T00:00:00.000Z","customer":0,"email":"test@test.com","photoURL":"https://www.mobafire.com/images/champion/square/shaco.png","signIn":"2021-07-06T00:00:00.000Z","displayName":"Customer Support","admin":999}]
+const cpusers = [{"uid":"p7ixY3zCjOQ0Kq67ABHqySvhQVh2","created":"2021-06-01T00:00:00.000Z","customer":0,"email":"test@test.com","photoURL":"https://www.mobafire.com/images/champion/square/shaco.png","signIn":"2021-07-06T00:00:00.000Z","displayName":"Customer Support","admin":999}]
 
 const users = [
   {

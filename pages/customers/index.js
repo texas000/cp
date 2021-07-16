@@ -1,11 +1,12 @@
 import { useRouter } from "next/dist/client/router";
 import Head from "next/head";
-import Layout from "../components/Layout";
-import PageTitle from "../components/PageTitle";
+import Layout from "../../components/Layout";
+import PageTitle from "../../components/PageTitle";
 import useSWR from "swr";
 import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import { Card, Table, Button } from "reactstrap";
+import Link from "next/link";
 const fetcher = async (...args) => {
 	const res = await fetch(...args);
 	return res.json();
@@ -56,8 +57,9 @@ export default function page(props) {
 						</tbody>
 					</Table>
 				</Card>
-
-				<Button>Create User</Button>
+				<Link href="/customers/create">
+					<a className="btn btn-primary">Create User</a>
+				</Link>
 			</Layout>
 		</div>
 	);

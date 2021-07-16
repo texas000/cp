@@ -44,7 +44,7 @@ const Shipment = ({ data }) => {
 				<h4 className="header-title mb-3">Shipments</h4>
 
 				<p>
-					<b>{data && data.length}</b> Tasks completed out of 200
+					<b>{data && data.length}</b> active shipments
 				</p>
 				{!data ? (
 					<Loader />
@@ -66,9 +66,6 @@ const Shipment = ({ data }) => {
 													<a href="/" className="text-body">
 														<span className="text-muted">{ga.Ref}</span>{" "}
 														<span className="text-primary">{ga.CustRef}</span>
-														{/* <small className="text-primary ml-2">
-															{moment(ga.Ready).utc().fromNow()}
-														</small> */}
 														{ga.Type == "OIM" && (
 															<i className="mdi mdi-ferry text-primary float-right"></i>
 														)}
@@ -86,9 +83,11 @@ const Shipment = ({ data }) => {
 												<h5 className="font-12 my-1">
 													{moment(ga.Ready).isSameOrAfter(moment())
 														? `Estimate Arrival ${moment(ga.Ready)
-																.utc()
+																.add("days", 1)
 																.fromNow()}`
-														: `Delivered ${moment(ga.Ready).utc().fromNow()}`}
+														: `Delivered ${moment(ga.Ready)
+																.add("days", 1)
+																.fromNow()}`}
 												</h5>
 												<div className="mt-2 progress">
 													<div
@@ -104,39 +103,7 @@ const Shipment = ({ data }) => {
 														}
 													></div>
 												</div>
-												{/* <span className="text-muted font-13">{ga.F_ETA}</span> */}
 											</td>
-											{/* <td>
-												<span className="text-muted font-13">Status</span>{" "}
-												<br />
-												<span className="badge badge-warning-lighten">
-													In-progress
-												</span>
-											</td>
-											<td>
-												<span className="text-muted font-13">Assigned to</span>
-												<h5 className="font-14 mt-1 font-weight-normal">
-													{ga.F_U1ID[0]}
-												</h5>
-											</td>
-											<td>
-												<span className="text-muted font-13">
-													Total time spend
-												</span>
-												<h5 className="font-14 mt-1 font-weight-normal">
-													3h 20min
-												</h5>
-											</td>
-											<td className="table-action" style={{ width: "90px" }}>
-												<a href="/" className="action-icon">
-													{" "}
-													<i className="mdi mdi-pencil"></i>
-												</a>
-												<a href="/" className="action-icon">
-													{" "}
-													<i className="mdi mdi-delete"></i>
-												</a>
-											</td> */}
 										</tr>
 									</Link>
 								))}

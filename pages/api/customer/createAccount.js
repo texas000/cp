@@ -3,14 +3,7 @@ import auth from "../../../lib/auth";
 const sql = require("mssql");
 
 export default (req, res) => {
-	var info = {
-		email: "user2@example.com",
-		emailVerified: false,
-		password: "jwiinc",
-		displayName: "Shaco Kim",
-		photoURL: "https://www.mobafire.com/images/champion/square/shaco.png",
-		disabled: false,
-	};
+	var info = JSON.parse(req.body);
 	// Create User
 	auth
 		.createUser(info)
@@ -23,7 +16,7 @@ export default (req, res) => {
 				let result = await pool
 					.request()
 					.query(
-						`INSERT INTO [dbo].[USER] ([uid],[created],[customer],[email],[photoURL],[signIn],[displayName]) VALUES (N'${uid}', GETDATE(), '0', N'${info.email}', N'${info.photoURL}', GETDATE(), N'${info.displayName}');`
+						`INSERT INTO [dbo].[USER] ([uid],[created],[customer],[email],[photoURL],[signIn],[displayName],[admin]) VALUES (N'${uid}', GETDATE(), '${info.cust}', N'${info.email}', N'${info.photoURL}', GETDATE(), N'${info.displayName}', '0');`
 					);
 				res.json(result);
 			} catch (err) {

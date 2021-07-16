@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 			await pool.connect();
 			// GET RESULT FROM SQL QUERY
 			let result = await pool.request().query(`
-                SELECT TOP 10 * FROM
+                SELECT TOP 15 * FROM
 (
 select 'OIM' as Type, 'uil-ship' as Icon,  F_CustRefNo, (select F_RefNo from T_OIMMAIN M where M.F_ID=H.F_OIMBLID) as F_RefNo, (select F_ETA from T_OIMMAIN M where M.F_ID=H.F_OIMBLID) as F_ETA from T_OIHMAIN H where H.F_CustRefNo like '%${q}%' AND H.F_Customer='${token.customer}'
 UNION ALL
@@ -39,6 +39,8 @@ UNION ALL
 select 'AIM' as Type, 'uil-plane' as Icon, F_CustRefNo, (select F_RefNo from T_AIMMAIN M where M.F_ID=H.F_AIMBLID) as F_RefNo, (select F_ETA from T_AIMMAIN M where M.F_ID=H.F_AIMBLID) as F_ETA from T_AIHMAIN H where H.F_CustRefNo like '%${q}%' AND H.F_Customer='${token.customer}'
 UNION ALL
 select 'AEX' as Type, 'uil-plane' as Icon, F_ExpRefNo, (select F_RefNo from T_AOMMAIN M where M.F_ID=H.F_AOMBLID) as F_RefNo, (select F_ETA from T_AOMMAIN M where M.F_ID=H.F_AOMBLID) as F_ETA from T_AOHMAIN H where H.F_ExpRefNo like '%${q}%' AND H.F_Customer='${token.customer}'
+UNION ALL
+select 'INV' as Type, 'uil-invoice' as Icon, F_YourRef, F_InvoiceNo as F_RefNo, F_DueDate as F_ETA from T_INVOHD where F_InvoiceNo like '%${q}%' AND F_BillTo='${token.customer}'
 )X ORDER BY F_ETA DESC;
                 `);
 			// SEND RESULT

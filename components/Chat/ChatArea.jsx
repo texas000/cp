@@ -2,54 +2,56 @@ import moment from "moment";
 import { createRef } from "react";
 import { useEffect, useState } from "react";
 import {
-  Card,
-  CardBody,
-  Col,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Form,
-  Input,
-  Media,
-  Row,
-  UncontrolledDropdown,
+	Card,
+	CardBody,
+	Col,
+	DropdownItem,
+	DropdownMenu,
+	DropdownToggle,
+	Form,
+	Input,
+	Media,
+	Row,
+	UncontrolledDropdown,
 } from "reactstrap";
 import SimpleBar from "simplebar-react";
 
 const Loader = () => (
-  <div className="preloader">
-    <div className="status">
-      <div className="bouncing-loader">
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-  </div>
+	<div className="preloader">
+		<div className="status">
+			<div className="bouncing-loader">
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+		</div>
+	</div>
 );
 
 export default function ChatArea(props) {
-  const messageEnd = createRef(null)
+	const messageEnd = createRef(null);
 
-  const scrollToBottom = () => {
-    messageEnd.current?.scrollIntoView({ behavior: "smooth", block: 'end' })
-  }
-  const [isLoaded, setIsLoaded] = useState(false);
-  useEffect(() => {
-    setIsLoaded(true);
-    setTimeout(()=>{
-      scrollToBottom()
-    },100)
-  }, [props]);
-  return (
-    <Card>
-      <CardBody className="position-relative">
-        {!isLoaded ? (
-          <Loader />
-        ) : (
-          <SimpleBar style={{ maxHeight: "395px", minHeight: "395px", width: "100%" }}>
-            <ul className="conversation-list">
-              {/* <li className="clearfix">
+	const scrollToBottom = () => {
+		messageEnd.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+	};
+	const [isLoaded, setIsLoaded] = useState(false);
+	useEffect(() => {
+		setIsLoaded(true);
+		setTimeout(() => {
+			scrollToBottom();
+		}, 100);
+	}, [props, isLoaded]);
+	return (
+		<Card>
+			<CardBody className="position-relative">
+				{!isLoaded ? (
+					<Loader />
+				) : (
+					<SimpleBar
+						style={{ maxHeight: "395px", minHeight: "395px", width: "100%" }}
+					>
+						<ul className="conversation-list">
+							{/* <li className="clearfix">
                 <div className="chat-avatar">
                   <img
                     src="/assets/images/users/avatar-2.jpg"
@@ -125,93 +127,109 @@ export default function ChatArea(props) {
                   </Card>
                 </div>
               </li> */}
-              {props.conversation && props.conversation.length>0 &&
-                props.conversation.map((ga, i) => (
-                  <li className={`clearfix ${ga.CREATOR_ID==props.token.uid && 'odd'}`} key={i}>
-                    <div className="chat-avatar">
-                      <img
-                        src={ga.PHOTO||"/assets/images/users/avatar-2.jpg"}
-                        className="rounded"
-                        alt=""
-                      />
-                      <i>{ga && moment(ga.CREATE_DATE, 'YYYY-MM-DD HH:mm:ss').fromNow()}</i>
-                    </div>
+							{props.conversation &&
+								props.conversation.length > 0 &&
+								props.conversation.map((ga, i) => (
+									<li
+										className={`clearfix ${
+											ga.CREATOR_ID == props.token.uid && "odd"
+										}`}
+										key={i}
+									>
+										<div className="chat-avatar">
+											<img
+												src={ga.PHOTO || "/assets/images/users/avatar-2.jpg"}
+												className="rounded"
+												alt=""
+											/>
+											<i>
+												{ga &&
+													moment(
+														ga.CREATE_DATE,
+														"YYYY-MM-DD HH:mm:ss"
+													).fromNow()}
+											</i>
+										</div>
 
-                    <div className="conversation-text">
-                      <div className="ctext-wrap">
-                        <i>{ga.NAME}</i>
-                        <p>{ga.MESSAGE_BODY}</p>
-                      </div>
-                    </div>
+										<div className="conversation-text">
+											<div className="ctext-wrap">
+												<i>{ga.NAME}</i>
+												<p>{ga.MESSAGE_BODY}</p>
+											</div>
+										</div>
 
-                    <UncontrolledDropdown className="conversation-actions">
-                      <DropdownToggle
-                        tag="button"
-                        className="btn btn-sm btn-link no-arrow p-0"
-                      >
-                        <i className="uil uil-ellipsis-v"></i>
-                      </DropdownToggle>
+										<UncontrolledDropdown className="conversation-actions">
+											<DropdownToggle
+												tag="button"
+												className="btn btn-sm btn-link no-arrow p-0"
+											>
+												<i className="uil uil-ellipsis-v"></i>
+											</DropdownToggle>
 
-                      <DropdownMenu>
-                        <DropdownItem onClick={()=>alert("copy")}>Copy Message</DropdownItem>
-                        <DropdownItem>Edit</DropdownItem>
-                        <DropdownItem>Delete</DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  </li>
-                ))}
-                <li className="clearfix" ref={messageEnd}></li>
-            </ul>
-          </SimpleBar>
-        )}
-        <Row>
-          <Col>
-            <div className="mt-2 bg-light p-3 rounded">
-              <Form
-                className="needs-validation"
-                noValidate
-                name="chat-form"
-                id="chat-form"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  props.sendMessage();
-                  props.setMsg("")
-                }}
-              >
-                <Row>
-                  <Col className="mb-2 mb-sm-0">
-                    <Input
-                      type="text"
-                      name="newMessage"
-                      className="border-0"
-                      onChange={(e) => props.setMsg(e.target.value)}
-                      value={props.msg}
-                      required
-                    ></Input>
-                  </Col>
-                  <Col className="col-sm-auto">
-                    <div className="btn-group">
-                      <a href="#" className="btn btn-light">
-                        <i className="uil uil-paperclip"></i>
-                      </a>
-                      {/* <a href="#" className="btn btn-light">
+											<DropdownMenu>
+												<DropdownItem onClick={() => alert("copy")}>
+													Copy Message
+												</DropdownItem>
+												<DropdownItem>Edit</DropdownItem>
+												<DropdownItem>Delete</DropdownItem>
+											</DropdownMenu>
+										</UncontrolledDropdown>
+									</li>
+								))}
+							<li className="clearfix" ref={messageEnd}></li>
+						</ul>
+					</SimpleBar>
+				)}
+				<Row>
+					<Col>
+						<div className="mt-2 bg-light p-3 rounded">
+							<Form
+								className="needs-validation"
+								noValidate
+								name="chat-form"
+								id="chat-form"
+								onSubmit={(e) => {
+									e.preventDefault();
+									props.sendMessage();
+									props.setMsg("");
+								}}
+							>
+								<Row>
+									<Col className="mb-2 mb-sm-0">
+										<Input
+											type="text"
+											name="newMessage"
+											className="border-0"
+											autoComplete="off"
+											autoCorrect="off"
+											onChange={(e) => props.setMsg(e.target.value)}
+											value={props.msg}
+											required
+										></Input>
+									</Col>
+									<Col className="col-sm-auto">
+										<div className="btn-group">
+											<a href="#" className="btn btn-light">
+												<i className="uil uil-paperclip"></i>
+											</a>
+											{/* <a href="#" className="btn btn-light">
                         {" "}
                         <i className="uil uil-smile"></i>{" "}
                       </a> */}
-                      <button
-                        type="submit"
-                        className="btn btn-success chat-send btn-block"
-                      >
-                        <i className="uil uil-message"></i>
-                      </button>
-                    </div>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-          </Col>
-        </Row>
-      </CardBody>
-    </Card>
-  );
+											<button
+												type="submit"
+												className="btn btn-success chat-send btn-block"
+											>
+												<i className="uil uil-message"></i>
+											</button>
+										</div>
+									</Col>
+								</Row>
+							</Form>
+						</div>
+					</Col>
+				</Row>
+			</CardBody>
+		</Card>
+	);
 }

@@ -52,6 +52,7 @@ export default function page(props) {
 		`/api/shipment/${props.refNo}?q=${props.Type.q}`,
 		fetcher
 	);
+	const { data: status } = useSWR("/api/shipment/getStatus?id=" + props.refNo);
 
 	// useEffect(() => {
 	// 	if (data) {
@@ -311,6 +312,32 @@ export default function page(props) {
 						</Col>
 
 						<Col xl={4} lg={6}>
+							<Card className="mb-3">
+								<CardBody>
+									<h4 className="header-title mb-2">Status</h4>
+									<div className="timeline-alt pb-0">
+										<div className="timeline-item">
+											<i
+												className={`mdi mdi-check-bold timeline-icon bg-info-lighten text-info`}
+											></i>
+											<div className="timeline-item-info">
+												<div
+													className={`${"text-info"} font-weight-bold mb-1 d-block`}
+												>
+													{status
+														? status.STATUS
+														: moment(data.master.F_ETA)
+																.utc()
+																.isSameOrAfter(moment())
+														? "IN TRANSIT"
+														: "DELIVERED"}
+												</div>
+											</div>
+										</div>
+									</div>
+								</CardBody>
+							</Card>
+
 							<Card>
 								<CardBody>
 									<h4 className="header-title mb-2">Route Detail</h4>
@@ -496,6 +523,18 @@ export default function page(props) {
 								</CardBody>
 							</Card>
 							{/* <code>{JSON.stringify(data)}</code> */}
+							<div className="d-print-none mt-4">
+								<div className="text-right">
+									<button
+										className="btn btn-primary"
+										onClick={(e) => {
+											window.print();
+										}}
+									>
+										<i className="mdi mdi-printer"></i> Print
+									</button>
+								</div>
+							</div>
 						</Col>
 					</Row>
 				)}

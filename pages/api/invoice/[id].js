@@ -26,8 +26,13 @@ export default async function handler(req, res) {
 			let result = await pool
 				.request()
 				.query(`SELECT TOP 1 * FROM T_INVOHD WHERE F_InvoiceNo='${id}';`);
-			// console.log(result.recordset[0]);
-			//INNER JOIN T_COMPANY ON T_COMPANY.F_ID=T_INVOHD.F_BillTo
+
+			let memo = await pool
+				.request()
+				.query(
+					`SELECT * FROM T_AOTHERINFO where F_TBNAME='T_INVOHD' AND F_TBID='${result.recordset[0].F_ID}'`
+				);
+
 			var master = "SELECT 1;";
 
 			if (result.recordset.length) {
@@ -95,6 +100,7 @@ export default async function handler(req, res) {
 					Ship: shipto.recordset[0],
 					House: house.recordset[0],
 					Master: master.recordset[0],
+					Memo: memo.recordset[0],
 				});
 			} else {
 				res.json({
@@ -104,6 +110,7 @@ export default async function handler(req, res) {
 					Ship: shipto.recordset[0],
 					House: house.recordset[0],
 					Master: [],
+					Memo: memo.recordset[0],
 				});
 			}
 		} catch (err) {

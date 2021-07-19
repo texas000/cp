@@ -8,6 +8,8 @@ import jwt from "jsonwebtoken";
 import { Row, Col, Card, CardBody } from "reactstrap";
 import useSWR from "swr";
 import moment from "moment";
+import usdFormat from "../../lib/format";
+
 const fetcher = async (...args) => {
 	const res = await fetch(...args);
 	return res.json();
@@ -193,9 +195,9 @@ export default function page(props) {
 																			<b>{item.F_Description}</b>
 																		</td>
 																		<td>{item.F_Qty}</td>
-																		<td>${item.F_Rate}</td>
+																		<td>{usdFormat(item.F_Rate)}</td>
 																		<td className="text-right">
-																			${item.F_Amount}
+																			{usdFormat(item.F_Amount)}
 																		</td>
 																	</tr>
 																);
@@ -216,6 +218,9 @@ export default function page(props) {
 													days the credits details supplied as confirmation of
 													work undertaken will be charged the agreed quoted fee
 													noted above.
+													<br />
+													{invoice.Memo && invoice.Memo.F_C1}
+													{invoice.Memo && invoice.Main.F_U1ID}
 												</small>
 											</div>
 										</Col>
@@ -229,7 +234,7 @@ export default function page(props) {
                                     <b>VAT (12.5):</b>{" "}
                                     <span className="float-right">{data.vat}</span>
                                 </p> */}
-												<h3>${invoice.Main.F_InvoiceAmt} USD</h3>
+												<h3>{usdFormat(invoice.Main.F_InvoiceAmt)} USD</h3>
 											</div>
 											<div className="clearfix"></div>
 										</Col>

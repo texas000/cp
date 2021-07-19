@@ -7,33 +7,35 @@ import Link from "next/link";
  * PageTitle
  */
 const PageTitle = (props) => {
-  return (
-    <Row>
-      <Col>
-        <div className="page-title-box">
-          <div className="page-title-right">
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <Link href="/">Jwi</Link>
-              </BreadcrumbItem>
-              {props.breadCrumbItems.map((item, index) => {
-                return item.active ? (
-                  <BreadcrumbItem active key={index}>
-                    {item.label}
-                  </BreadcrumbItem>
-                ) : (
-                  <BreadcrumbItem key={index}>
-                    <Link href={item.path}>{item.label}</Link>
-                  </BreadcrumbItem>
-                );
-              })}
-            </Breadcrumb>
-          </div>
-          <h4 className="page-title text-capitalize">{props.title}</h4>
-        </div>
-      </Col>
-    </Row>
-  );
+	return (
+		<Row>
+			<Col>
+				<div className="page-title-box">
+					<div className="page-title-right">
+						<Breadcrumb>
+							<BreadcrumbItem>
+								<Link href="/">
+									<a>Jwi</a>
+								</Link>
+							</BreadcrumbItem>
+							{props.breadCrumbItems.map((item, index) => {
+								return item.active ? (
+									<BreadcrumbItem active key={index}>
+										{item.label}
+									</BreadcrumbItem>
+								) : (
+									<BreadcrumbItem key={index}>
+										<Link href={item.path}>{item.label}</Link>
+									</BreadcrumbItem>
+								);
+							})}
+						</Breadcrumb>
+					</div>
+					<h4 className="page-title text-capitalize">{props.title}</h4>
+				</div>
+			</Col>
+		</Row>
+	);
 };
 
 export default PageTitle;

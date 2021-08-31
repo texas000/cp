@@ -86,9 +86,11 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 								<Card>
 									<div className="card-header pt-4 pb-4 text-center bg-primary">
 										<a href="/">
-											<span>
-												<img src="/assets/images/logo.png" alt="" height="18" />
-											</span>
+											<img
+												src="/assets/images/logo.png"
+												alt="logo"
+												className="h-5 mx-auto"
+											/>
 										</a>
 									</div>
 
@@ -107,10 +109,10 @@ export default function Index({ API_KEY, FIREBASE_CONFIG }) {
 										)}
 
 										<div className="text-center w-75 m-auto">
-											<h4 className="text-dark-50 text-center mt-0 font-weight-bold">
+											<h4 className="text-dark-50 text-center mt-0 font-weight-bold text-lg">
 												Sign In
 											</h4>
-											<p className="text-muted mb-4">
+											<p className="text-muted mt-2 mb-4">
 												Enter your username and password to access admin panel.
 											</p>
 										</div>

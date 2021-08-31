@@ -57,7 +57,7 @@ const Invoice = ({ data }) => {
 							{data.length ? (
 								data.map((ga) => (
 									<Link key={ga.F_ID} href={`/invoice/${ga.F_InvoiceNo}`}>
-										<tr>
+										<tr className="cursor-pointer">
 											<td>
 												<h5 className="font-14 my-1">
 													<a href="/" className="text-body">

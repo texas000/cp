@@ -13,7 +13,6 @@ File: Main Css File
 @import "config/saas/custom-variables";
 @import "./node_modules/bootstrap/scss/bootstrap";
 
-
 // Structure
 @import "custom/structure/general";
 @import "custom/structure/left-menu";
@@ -24,10 +23,8 @@ File: Main Css File
 // horizontal nav
 @import "custom/structure/horizontal-nav";
 
-
 //Fonts
 @import "custom/fonts/nunito";
-
 
 //Components
 @import "custom/components/mixins";
@@ -57,7 +54,6 @@ File: Main Css File
 @import "custom/components/preloader";
 @import "custom/components/hero";
 
-
 //Pages
 @import "custom/pages/authentication";
 @import "custom/pages/components-demo";
@@ -68,10 +64,8 @@ File: Main Css File
 @import "custom/pages/email";
 @import "custom/pages/timeline";
 
-
 // Vendors
 @import "./node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min";
-
 
 // Plugins
 @import "custom/plugins/apexcharts";

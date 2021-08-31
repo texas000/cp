@@ -53,6 +53,7 @@ export default function page(props) {
 		fetcher
 	);
 	const { data: status } = useSWR("/api/shipment/getStatus?id=" + props.refNo);
+	const { data: files } = useSWR("/api/shipment/getFiles?id=" + props.refNo);
 
 	// useEffect(() => {
 	// 	if (data) {
@@ -99,7 +100,7 @@ export default function page(props) {
 										</DropdownMenu>
 									</UncontrolledDropdown>
 									{/* {ga.F_ExpRefNo || ga.F_CustRefNo || ga.F_ExPref} */}
-									<h3 className="mt-0">
+									<h3 className="mt-0 font-bold">
 										{(data.master && data.master.F_CustRefNo) ||
 											data.house.map(
 												(ga) =>
@@ -140,8 +141,64 @@ export default function page(props) {
 
 									{selectedNav == 1 && (
 										<React.Fragment>
-											<h5 className="mb-2">Project Overview:</h5>
-											<Row>
+											{/* <h5 className="mb-2">Project Overview:</h5> */}
+											<div className="bg-white shadow overflow-hidden sm:rounded-lg">
+												<div>
+													<dl>
+														<div className="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Master Bill of Lading
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																{data.master.F_MBLNo ||
+																	data.master.F_SMBLNo ||
+																	data.master.F_MawbNo}
+															</dd>
+														</div>
+														<div className="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Weight
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																{isQuery &&
+																	(props.Type.q === "OIM" ||
+																		props.Type.q === "OEX") &&
+																	`${data.house.reduce(
+																		(a, b) => a + (b.F_KGS || 0),
+																		0
+																	)} KG`}
+																{isQuery &&
+																	(props.Type.q === "AEX" ||
+																		props.Type.q === "AIM") &&
+																	`${data.house.reduce(
+																		(a, b) => a + (b.F_ChgWeight || 0),
+																		0
+																	)} KG`}
+															</dd>
+														</div>
+														<div className="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Vessel
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																{data.master.F_Vessel ||
+																	data.master.F_FLTno ||
+																	data.master.F_FLTNo}{" "}
+																{data.master.F_Voyage}
+															</dd>
+														</div>
+														<div className="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Number of containers
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																{data.container.length}
+															</dd>
+														</div>
+													</dl>
+												</div>
+											</div>
+											{/* <Row>
 												<Col md={3}>
 													<div className="mb-4">
 														<h5>MASTER B/L</h5>
@@ -152,14 +209,6 @@ export default function page(props) {
 														</p>
 													</div>
 												</Col>
-												{/* <Col md={3}>
-													<div className="mb-4">
-														<h5>VOLUME</h5>
-														<p>
-															{data.reduce((a, b) => a + (b.F_CBM || 0), 0)} CBM
-														</p>
-													</div>
-												</Col> */}
 												<Col md={3}>
 													<div className="mb-4 text-uppercase">
 														<h5>WEIGHT</h5>
@@ -198,110 +247,162 @@ export default function page(props) {
 														<p>{data.container.length}</p>
 													</div>
 												</Col>
-											</Row>
-
-											{/* <div className="mb-2">
-												<b>CONSIGNEE</b>: {data.master.F_CName}
-											</div>
-											<div className="mb-2">
-												<b>NOTIFY</b>: {data.master.F_NName}
-											</div>
-											<div className="mb-2">
-												<b>SHIPPER</b>: {data.master.F_SName}
-											</div> */}
+											</Row> */}
 										</React.Fragment>
 									)}
 									{selectedNav == 2 && (
 										<React.Fragment>
-											<h5 className="card-title mb-2">Details</h5>
-
-											{data.house.map((ga) => (
-												<Row key={ga.F_ID}>
-													<Col md={3}>
-														<div className="mb-4">
-															<h5>HOUSE B/L</h5>
-															<p>{ga.F_HBLNo || ga.F_HawbNo || ga.F_HAWBNo}</p>
+											<div className="bg-white shadow overflow-hidden sm:rounded-lg">
+												<div>
+													<dl>
+														<div className="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																House Bill of Lading
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																<ul
+																	role="list"
+																	className={`${
+																		data.house.length > 1
+																			? "border border-gray-200 rounded-md divide-y divide-gray-200"
+																			: "rounded-md"
+																	}`}
+																>
+																	{data.house.map((ga) => (
+																		<li className="px-2 py-1">
+																			{ga.F_HBLNo || ga.F_HawbNo || ga.F_HAWBNo}
+																		</li>
+																	))}
+																</ul>
+															</dd>
 														</div>
-													</Col>
-													<Col md={3}>
-														<div className="mb-4">
-															<h5>REF</h5>
-															<p>
-																{ga.F_ExpRefNo || ga.F_CustRefNo || ga.F_ExPref}
-															</p>
+														<div className="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Reference Number
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																<ul
+																	role="list"
+																	className={`${
+																		data.house.length > 1
+																			? "border border-gray-200 rounded-md divide-y divide-gray-200"
+																			: "rounded-md"
+																	}`}
+																>
+																	{data.house.map((ga) => (
+																		<li className="px-2 py-1">
+																			{ga.F_ExpRefNo ||
+																				ga.F_CustRefNo ||
+																				ga.F_ExPref ||
+																				"NOT FOUND"}
+																		</li>
+																	))}
+																</ul>
+															</dd>
 														</div>
-													</Col>
-													<Col md={4}>
-														<div className="mb-4">
-															<h5>PACKAGES</h5>
-															<p>
-																{ga.F_PKGS || ga.F_Pkgs}{" "}
-																{ga.F_PUnit || ga.F_Punit}
-															</p>
+														<div className="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Packages
+															</dt>
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																<ul
+																	role="list"
+																	className={`${
+																		data.house.length > 1
+																			? "border border-gray-200 rounded-md divide-y divide-gray-200"
+																			: "rounded-md"
+																	}`}
+																>
+																	{data.house.map((ga, i) => (
+																		<li className="px-2 py-1">
+																			{ga.F_PKGS || ga.F_Pkgs}{" "}
+																			{ga.F_PUnit || ga.F_Punit}
+																		</li>
+																	))}
+																</ul>
+															</dd>
 														</div>
-													</Col>
-												</Row>
-											))}
-											{data.container.map((ga) => (
-												<Row key={ga.F_ID}>
-													<Col md={4}>
-														<div className="mb-4">
-															<h5>CONTAINER NUMBER</h5>
-															<p>{ga.F_ContainerNo}</p>
+														<div className="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+															<dt className="text-sm font-medium text-gray-500">
+																Containers
+															</dt>
+															<dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+																<ul
+																	role="list"
+																	className="border border-gray-200 rounded-md divide-y divide-gray-200"
+																>
+																	{data.container.map((na) => (
+																		<li className="pl-3 pr-4 py-1 flex items-center justify-between text-sm">
+																			<div className="w-0 flex-1 flex items-center">
+																				<span className="ml-2 flex-1 w-0 truncate">
+																					{na.F_ContainerNo} - {na.F_ConType}
+																				</span>
+																			</div>
+																			<div className="ml-4 flex-shrink-0">
+																				<span className="font-medium text-indigo-600">
+																					{na.F_SealNo}
+																				</span>
+																			</div>
+																		</li>
+																	))}
+																</ul>
+															</dd>
 														</div>
-													</Col>
-													<Col md={4}>
-														<div className="mb-4">
-															<h5>TYPE</h5>
-															<p>{ga.F_ConType}</p>
-														</div>
-													</Col>
-													<Col md={4}>
-														<div className="mb-4">
-															<h5>SEAL</h5>
-															<p>{ga.F_SealNo}</p>
-														</div>
-													</Col>
-												</Row>
-											))}
+													</dl>
+												</div>
+											</div>
 										</React.Fragment>
 									)}
 									{selectedNav == 3 && (
 										<React.Fragment>
 											<Card>
 												<CardBody>
-													<h5 className="card-title mb-3">Detail</h5>
-
-													<Card className="mb-1 shadow-none border">
-														<div className="p-2">
-															<Row className="align-items-center">
-																<div className="col-auto">
-																	<div className="avatar-sm">
-																		<span className="avatar-title rounded">
-																			.ZIP
-																		</span>
+													{/* <h5 className="mb-3">Detail</h5> */}
+													{files.map((ga) => (
+														<Card
+															className="mb-1 shadow-none border uppercase cursor-pointer hover:bg-gray-100"
+															key={ga.F_ID}
+														>
+															<div className="p-2">
+																<Row
+																	className="align-items-center"
+																	onClick={() => {
+																		window.location.assign(
+																			`/api/file/get?ref=${
+																				ga.F_REF
+																			}&file=${encodeURIComponent(
+																				ga.F_FILENAME
+																			)}`
+																		);
+																	}}
+																>
+																	<div className="col-auto">
+																		<div className="avatar-sm">
+																			<span className="avatar-title rounded">
+																				{ga.F_LABEL}
+																			</span>
+																		</div>
 																	</div>
-																</div>
-																<div className="col pl-0">
-																	<a
-																		href="#"
-																		className="text-muted font-weight-bold"
-																	>
-																		Hyper-admin-design.zip
-																	</a>
-																	<p className="mb-0">2.3 MB</p>
-																</div>
-																<div className="col-auto">
-																	<a
-																		href="#"
-																		className="btn btn-link btn-lg text-muted"
-																	>
-																		<i className="dripicons-download"></i>
-																	</a>
-																</div>
-															</Row>
-														</div>
-													</Card>
+																	<div className="col pl-0">
+																		<span className="font-weight-bold">
+																			{ga.F_FILENAME}
+																		</span>
+																		<p className="mb-0">
+																			{moment(ga.F_UPLOADEDAT).format("ll")}
+																		</p>
+																	</div>
+																	<div className="col-auto">
+																		<a
+																			href="#"
+																			className="btn btn-link btn-lg text-muted"
+																		>
+																			<i className="dripicons-download"></i>
+																		</a>
+																	</div>
+																</Row>
+															</div>
+														</Card>
+													))}
 												</CardBody>
 											</Card>
 										</React.Fragment>

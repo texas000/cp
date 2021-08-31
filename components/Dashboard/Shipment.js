@@ -60,7 +60,7 @@ const Shipment = ({ data }) => {
 										href={`/shipment/${ga.Ref}?q=${ga.Type}`}
 										key={i + "shipment"}
 									>
-										<tr>
+										<tr className="cursor-pointer">
 											<td>
 												<h5 className="font-14 my-1">
 													<a href="/" className="text-body">

@@ -259,17 +259,17 @@ export default function page(props) {
 															<dt className="text-sm font-medium text-gray-500">
 																House Bill of Lading
 															</dt>
-															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-0">
 																<ul
 																	role="list"
 																	className={`${
 																		data.house.length > 1
-																			? "border border-gray-200 rounded-md divide-y divide-gray-200"
-																			: "rounded-md"
+																			? "border border-gray-200 rounded-md divide-y divide-gray-200 mb-0"
+																			: "rounded-md mb-0"
 																	}`}
 																>
-																	{data.house.map((ga) => (
-																		<li className="px-2 py-1">
+																	{data.house.map((ga, i) => (
+																		<li className="px-2 py-1" key={i + "HBL"}>
 																			{ga.F_HBLNo || ga.F_HawbNo || ga.F_HAWBNo}
 																		</li>
 																	))}
@@ -280,17 +280,17 @@ export default function page(props) {
 															<dt className="text-sm font-medium text-gray-500">
 																Reference Number
 															</dt>
-															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-0">
 																<ul
 																	role="list"
 																	className={`${
 																		data.house.length > 1
-																			? "border border-gray-200 rounded-md divide-y divide-gray-200"
-																			: "rounded-md"
+																			? "border border-gray-200 rounded-md divide-y divide-gray-200 mb-0"
+																			: "rounded-md mb-0"
 																	}`}
 																>
-																	{data.house.map((ga) => (
-																		<li className="px-2 py-1">
+																	{data.house.map((ga, i) => (
+																		<li className="px-2 py-1" key={i + "REF"}>
 																			{ga.F_ExpRefNo ||
 																				ga.F_CustRefNo ||
 																				ga.F_ExPref ||
@@ -304,17 +304,17 @@ export default function page(props) {
 															<dt className="text-sm font-medium text-gray-500">
 																Packages
 															</dt>
-															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+															<dd className="text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-0">
 																<ul
 																	role="list"
 																	className={`${
 																		data.house.length > 1
-																			? "border border-gray-200 rounded-md divide-y divide-gray-200"
-																			: "rounded-md"
+																			? "border border-gray-200 rounded-md divide-y divide-gray-200 mb-0"
+																			: "rounded-md mb-0"
 																	}`}
 																>
 																	{data.house.map((ga, i) => (
-																		<li className="px-2 py-1">
+																		<li className="px-2 py-1" key={i + "PKG"}>
 																			{ga.F_PKGS || ga.F_Pkgs}{" "}
 																			{ga.F_PUnit || ga.F_Punit}
 																		</li>
@@ -326,13 +326,16 @@ export default function page(props) {
 															<dt className="text-sm font-medium text-gray-500">
 																Containers
 															</dt>
-															<dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+															<dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 mb-0">
 																<ul
 																	role="list"
-																	className="border border-gray-200 rounded-md divide-y divide-gray-200"
+																	className="border border-gray-200 rounded-md divide-y divide-gray-200 mb-0"
 																>
 																	{data.container.map((na) => (
-																		<li className="pl-3 pr-4 py-1 flex items-center justify-between text-sm">
+																		<li
+																			className="pl-3 pr-4 py-1 flex items-center justify-between text-sm"
+																			key={na.F_ContainerNo}
+																		>
 																			<div className="w-0 flex-1 flex items-center">
 																				<span className="ml-2 flex-1 w-0 truncate">
 																					{na.F_ContainerNo} - {na.F_ConType}
@@ -358,51 +361,57 @@ export default function page(props) {
 											<Card>
 												<CardBody>
 													{/* <h5 className="mb-3">Detail</h5> */}
-													{files.map((ga) => (
-														<Card
-															className="mb-1 shadow-none border uppercase cursor-pointer hover:bg-gray-100"
-															key={ga.F_ID}
-														>
-															<div className="p-2">
-																<Row
-																	className="align-items-center"
-																	onClick={() => {
-																		window.location.assign(
-																			`/api/file/get?ref=${
-																				ga.F_REF
-																			}&file=${encodeURIComponent(
-																				ga.F_FILENAME
-																			)}`
-																		);
-																	}}
-																>
-																	<div className="col-auto">
-																		<div className="avatar-sm">
-																			<span className="avatar-title rounded">
-																				{ga.F_LABEL}
-																			</span>
+													{files.length ? (
+														files.map((ga) => (
+															<Card
+																className="mb-1 shadow-none border uppercase cursor-pointer hover:bg-gray-100"
+																key={ga.F_ID}
+															>
+																<div className="p-2">
+																	<Row
+																		className="align-items-center"
+																		onClick={() => {
+																			window.location.assign(
+																				`/api/file/get?ref=${
+																					ga.F_REF
+																				}&file=${encodeURIComponent(
+																					ga.F_FILENAME
+																				)}`
+																			);
+																		}}
+																	>
+																		<div className="col-auto">
+																			<div className="avatar-sm">
+																				<span className="avatar-title rounded">
+																					{ga.F_LABEL}
+																				</span>
+																			</div>
 																		</div>
-																	</div>
-																	<div className="col pl-0">
-																		<span className="font-weight-bold">
-																			{ga.F_FILENAME}
-																		</span>
-																		<p className="mb-0">
-																			{moment(ga.F_UPLOADEDAT).format("ll")}
-																		</p>
-																	</div>
-																	<div className="col-auto">
-																		<a
-																			href="#"
-																			className="btn btn-link btn-lg text-muted"
-																		>
-																			<i className="dripicons-download"></i>
-																		</a>
-																	</div>
-																</Row>
-															</div>
-														</Card>
-													))}
+																		<div className="col pl-0">
+																			<span className="font-weight-bold">
+																				{ga.F_FILENAME}
+																			</span>
+																			<p className="mb-0">
+																				{moment(ga.F_UPLOADEDAT).format("ll")}
+																			</p>
+																		</div>
+																		<div className="col-auto">
+																			<a
+																				href="#"
+																				className="btn btn-link btn-lg text-muted"
+																			>
+																				<i className="dripicons-download"></i>
+																			</a>
+																		</div>
+																	</Row>
+																</div>
+															</Card>
+														))
+													) : (
+														<div className="shadow-md rounded-lg p-3 border uppercase text-center">
+															<span>File Not Found</span>
+														</div>
+													)}
 												</CardBody>
 											</Card>
 										</React.Fragment>

@@ -6,7 +6,7 @@ export default function Comments(props) {
   return (
     <Card>
       <CardBody>
-        <h4 className="mt-0 mb-3">Comments (258)</h4>
+        <h4 className="mt-0 mb-3">Comments (0)</h4>
         <textarea
           className="form-control form-control-light mb-2"
           placeholder="Write message"
@@ -29,7 +29,7 @@ export default function Comments(props) {
             </button>
           </div>
         </div>
-
+        {/* 
         <div className="media mt-2">
           <img
             className="mr-3 avatar-sm rounded-circle"
@@ -60,13 +60,13 @@ export default function Comments(props) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className="text-center mt-2">
+        {/* <div className="text-center mt-2">
           <a href="/" className="text-danger">
             Load more{" "}
           </a>
-        </div>
+        </div> */}
       </CardBody>
     </Card>
   );

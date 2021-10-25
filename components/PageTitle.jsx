@@ -31,7 +31,7 @@ const PageTitle = (props) => {
               })}
             </Breadcrumb>
           </div>
-          <h4 className="page-title uppercase">{props.title}</h4>
+          <h4 className="page-title font-bold uppercase">{props.title}</h4>
         </div>
       </Col>
     </Row>

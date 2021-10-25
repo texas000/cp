@@ -72,7 +72,7 @@ export default function version(props) {
                     </div>
                     <div className="flex flex-col items-center justify-end w-full h-full md:w-1/3 md:flex-row md:py-0">
                       <a
-                        href="/"
+                        href="/dashboard"
                         className="inline-flex items-center justify-center px-4 py-2 mr-1 text-base font-medium leading-6 text-blue-600 whitespace-no-wrap transition duration-150 ease-in-out rounded-full hover:bg-gray-100 focus:outline-none focus:border-blue-700 focus:shadow-indigo-800 active:bg-blue-700 hover:no-underline"
                       >
                         Dashboard
@@ -124,16 +124,16 @@ export default function version(props) {
                 If you are ready to change the way you design websites, then
                 you'll want to use our block builder to make it fun and easy!
               </div>
-              <div className="relative flex items-center max-w-md mx-auto mt-12 overflow-hidden text-center rounded-full border border-gray-500">
+              <div className="relative flex items-center max-w-md mx-auto mt-12 overflow-hidden text-center rounded-full border-2 border-gray-300">
                 <input
                   type="text"
                   placeholder="Container Number"
-                  className="w-full h-12 px-6 py-2 font-medium text-indigo-600 focus:outline-none"
+                  className="w-full h-12 px-6 py-2 font-medium text-indigo-600 focus:outline-none rounded-l-full"
                 />
                 <span className="relative top-0 right-0 block">
                   <button
                     type="button"
-                    className="inline-flex items-center w-32 h-12 px-8 text-base font-bold leading-6 text-white transition duration-150 ease-in-out bg-indigo-400 hover:bg-indigo-700 focus:outline-none active:bg-indigo-700"
+                    className="inline-flex items-center rounded-r-full w-32 h-12 px-8 text-base font-bold leading-6 text-white transition duration-150 ease-in-out bg-gray-300 hover:bg-gray-400 focus:outline-none active:bg-indigo-700"
                   >
                     Track
                   </button>

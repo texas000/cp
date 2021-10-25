@@ -145,11 +145,11 @@ export default function page(props) {
                       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                         <div>
                           <dl>
-                            <div className="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <div className="bg-white px-4 py-2 sm:grid sm:grid-cols-3">
                               <dt className="text-sm font-medium text-gray-500">
                                 Customer
                               </dt>
-                              <dd className="font-bold sm:mt-0 sm:col-span-2">
+                              <dd className="font-bold sm:col-span-2">
                                 {data.house.length && data.house[0].CUSTOMER}
                               </dd>
                             </div>
@@ -157,7 +157,7 @@ export default function page(props) {
                               <dt className="text-sm font-medium text-gray-500">
                                 Master Bill of Lading
                               </dt>
-                              <dd className="font-bold sm:mt-0 sm:col-span-2">
+                              <dd className="font-bold sm:col-span-2">
                                 {data.master.F_MBLNo ||
                                   data.master.F_SMBLNo ||
                                   data.master.F_MawbNo}

@@ -118,8 +118,7 @@ export default function Sidebar(props) {
   return (
     <div
       className={`${
-        props.windowDimensions.width < 1030 &&
-        props.windowDimensions.width > 768
+        props.windowDimensions.width < 1030
           ? "left-side-menu-condensed"
           : "left-side-menu"
       }`}
@@ -130,44 +129,35 @@ export default function Sidebar(props) {
             <img
               src="/assets/images/jwi.png"
               alt="logo"
-              className="h-4 mx-auto w-9 h-9 bg-white rounded-full p-1"
+              className="mx-auto w-9 h-9 bg-white rounded-full p-1"
             />
           </span>
-          <span className="logo-sm">
+          <span className="logo-sm mt-2">
             <img
               src="/assets/images/jwi.png"
               alt="logo"
-              height="16"
-              className="w-8 h-8 bg-white rounded-full p-1"
+              className="mx-auto w-10 h-10 bg-white rounded-full p-1"
             />
           </span>
         </a>
       </Link>
 
-      <a href="/" className="logo text-center logo-dark">
+      {/* <a href="/" className="logo text-center logo-dark">
         <span className="logo-lg">
           <img
-            src={
-              isLight
-                ? "/assets/images/logo-dark.png"
-                : "/assets/images/logo.png"
-            }
+            src="/assets/images/jwi.png"
             alt="logo"
-            height="16"
+            className="w-8 h-8 bg-white rounded-full p-1"
           />
         </span>
         <span className="logo-sm">
           <img
-            src={
-              isLight
-                ? "/assets/images/logo_sm.png"
-                : "/assets/images/logo_sm_dark.png"
-            }
+            src="/assets/images/jwi.png"
             alt="logo"
-            height="16"
+            className="w-8 h-8 bg-white rounded-full p-1"
           />
         </span>
-      </a>
+      </a> */}
 
       <SimpleBar
         style={{ maxHeight: "100%" }}

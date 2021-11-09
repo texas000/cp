@@ -162,27 +162,13 @@ const ShipmentDetails = ({ master, title, house, files }) => {
             { id: 3, name: 'Wavex Canvas Messenger Bag', quantity: 5, price: '$180', total: '$900' },
             { id: 4, name: 'The Utility Shirt', quantity: 2, price: '$79', total: '$158' },
         ],
-        gross_total: '$1641',
-        shipping_charge: '$23',
-        tax: '$19.22',
-        net_total: '$1683.22',
         shipping: {
             provider: house[0].CUSTOMER,
             address_1: master.F_MBLNo || master.F_SMBLNo || master.F_MawbNo,
             address_2: master.CARRIER,
             vessel: master.F_Vessel || master.F_FLTno || master.F_FLTNo,
             voyage: master.F_Voyage,
-            commodity: master.F_mCommodity || master.F_Commodity,
-        },
-        billing: {
-            type: 'Credit Card',
-            provider: 'Visa ending in 2851',
-            valid: '02/2020',
-        },
-        delivery: {
-            provider: 'UPS Delivery',
-            order_id: '#BM31',
-            payment_mode: 'COD',
+            commodity: master.F_mCommodity || master.F_Commodity || house[0].F_Description,
         },
     };
 
@@ -268,8 +254,8 @@ const ShipmentDetails = ({ master, title, house, files }) => {
                                 etd={master.F_ETD}
                                 eta={master.F_ETA}
                                 feta={master.F_FETA}
-                                loading={master.F_LoadingPort}
-                                discharge={master.F_DisCharge || master.F_Discharge}
+                                loading={master.F_LoadingPort || master.F_LCode}
+                                discharge={master.F_DisCharge || master.F_Discharge || master.F_Dcode}
                                 final={master.F_FinalDest}
                                 isPastEtd={order.departed}
                                 isPastEta={order.arrived}

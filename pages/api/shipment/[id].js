@@ -30,12 +30,12 @@ export default async function handler(req, res) {
                 isContainer = 'T_OOMCONTAINER';
                 break;
             case 'AIM':
-                querys = `select *, (select T_COMPANY.F_SName from T_COMPANY where T_COMPANY.F_ID = M.F_Carrier) as CARRIER from T_AIMMAIN as M where F_RefNo='${id}';`;
+                querys = `select *, (SELECT F_Name FROM T_CODEAIRLINE WHERE T_CODEAIRLINE.F_Prefix=SUBSTRING(M.F_MawbNo, 1, 3)) AS CARRIER from T_AIMMAIN as M where F_RefNo='${id}';`;
                 houseTable = 'T_AIHMAIN';
                 blid = 'F_AIMBLID';
                 break;
             case 'AEX':
-                querys = `select *, (select T_COMPANY.F_SName from T_COMPANY where T_COMPANY.F_ID = M.F_Carrier) as CARRIER from T_AOMMAIN as M where F_RefNo='${id}';`;
+                querys = `select *, (select T_CODEAIRLINE.F_Name from T_CODEAIRLINE where T_CODEAIRLINE.F_ID = M.F_Carrier) as CARRIER from T_AOMMAIN as M where F_RefNo='${id}';`;
                 houseTable = 'T_AOHMAIN';
                 blid = 'F_AOMBLID';
                 break;

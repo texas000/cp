@@ -57,7 +57,7 @@ const Activity = ({ invoice }) => {
                                     <span className="text-muted font-13">Prepared by</span> <br />
                                     <p className="mb-0 text-uppercase">{ga.F_U2ID}</p>
                                 </td>
-                                <td className="table-action" style={{ width: '50px' }}>
+                                {/* <td className="table-action" style={{ width: '50px' }}>
                                     <Dropdown className="float-end" align="end">
                                         <Dropdown.Toggle
                                             variant="link"
@@ -69,7 +69,7 @@ const Activity = ({ invoice }) => {
                                             <Dropdown.Item>Action</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                     </tbody>

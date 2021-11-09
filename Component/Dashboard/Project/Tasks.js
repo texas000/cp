@@ -14,7 +14,7 @@ const Tasks = ({ shipment }) => {
                 <></>
             ) : (
                 <Card.Body>
-                    <Dropdown className="float-end" align="end">
+                    {/* <Dropdown className="float-end" align="end">
                         <Dropdown.Toggle variant="link" className="arrow-none card-drop p-0 shadow-none">
                             <i className="mdi mdi-dots-vertical"></i>
                         </Dropdown.Toggle>
@@ -24,7 +24,7 @@ const Tasks = ({ shipment }) => {
                             <Dropdown.Item>Action</Dropdown.Item>
                             <Dropdown.Item>Settings</Dropdown.Item>
                         </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
 
                     <h4 className="header-title mb-3">Shipment</h4>
 
@@ -80,7 +80,7 @@ const Tasks = ({ shipment }) => {
                                                 : ''}
                                         </h5>
                                     </td>
-                                    <td className="table-action" style={{ width: '90px' }}>
+                                    {/* <td className="table-action" style={{ width: '90px' }}>
                                         <a className="action-icon">
                                             {' '}
                                             <i className="mdi mdi-pencil"></i>
@@ -89,7 +89,7 @@ const Tasks = ({ shipment }) => {
                                             {' '}
                                             <i className="mdi mdi-delete"></i>
                                         </a>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>

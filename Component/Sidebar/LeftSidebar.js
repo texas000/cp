@@ -28,7 +28,7 @@ const SideBarContent = ({ hideUserProfile, token }) => {
 
             <AppMenu menuItems={getMenuItems()} token={token} />
 
-            <div className={classNames('help-box', 'text-center', { 'text-white': hideUserProfile })}>
+            {/* <div className={classNames('help-box', 'text-center', { 'text-white': hideUserProfile })}>
                 <a href="/" className="float-end close-btn text-white">
                     <i className="mdi mdi-close" />
                 </a>
@@ -44,7 +44,7 @@ const SideBarContent = ({ hideUserProfile, token }) => {
                     )}>
                     Upgrade
                 </button>
-            </div>
+            </div> */}
             <div className="clearfix" />
         </>
     );
@@ -79,9 +79,10 @@ const LeftSidebar = ({ isCondensed, isLight, hideLogo, hideUserProfile, token })
                     <a href="/" className="logo text-center logo-light">
                         <span className="logo-lg">
                             <img
-                                src={isLight ? '/assets/images/logo-dark.png' : '/assets/images/logo.png'}
+                                src="/assets/images/logo_sm.png"
                                 alt="logo"
-                                height="25"
+                                height="35"
+                                style={{ backgroundColor: 'white', borderRadius: '50%', padding: '0.2rem' }}
                             />
                         </span>
                         <span className="logo-sm">

@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         INNER JOIN
          T_COMPANY SHIPTO ON SHIPTO.F_ID=T_INVOHD.F_ShipTo
         INNER JOIN
-         T_COMPANY BILLTO ON SHIPTO.F_ID=T_INVOHD.F_BillTo
+         T_COMPANY BILLTO ON BILLTO.F_ID=T_INVOHD.F_BillTo
         WHERE F_InvoiceNo='${id}';`;
         try {
             await pool.connect();
@@ -32,34 +32,81 @@ export default async function handler(req, res) {
                     let invoDetail = await pool.request().query(`
                     SELECT * FROM T_INVODETAIL WHERE F_INVOHDID='${invo.recordset[0].F_ID}';
                     `);
-                    let house = await pool.request().query(`
-                    SELECT * FROM ${invo.recordset[0].F_TBName} WHERE F_ID=${invo.recordset[0].F_TBID};
-                    `);
-                    var isOIM = house.recordset[0].hasOwnProperty('F_OIMBLID');
-                    var isOOM = house.recordset[0].hasOwnProperty('F_OOMBLID');
-                    var isAIM = house.recordset[0].hasOwnProperty('F_AIMBLID');
-                    var isAOM = house.recordset[0].hasOwnProperty('F_AOMBLID');
-                    let master = await pool.request().query(`
-                    SELECT * FROM ${
-                        isOIM ? 'T_OIMMAIN' : isOOM ? 'T_OOMMAIN' : isAIM ? 'T_AIMMAIN' : isAOM ? 'T_AOMMAIN' : ''
-                    } WHERE F_ID=${
-                        isOIM
-                            ? house.recordset[0].F_OIMBLID
-                            : isOOM
-                            ? house.recordset[0].F_OOMBLID
-                            : isAIM
-                            ? house.recordset[0].F_AIMBLID
-                            : isAOM
-                            ? house.recordset[0].F_AOMBLID
-                            : ''
-                    };
-                    `);
+                    var house = [];
+                    var master = {};
+                    let main = await pool.request().query(`
+                        SELECT * FROM ${invo.recordset[0].F_TBName} WHERE F_ID=${invo.recordset[0].F_TBID};
+                        `);
+                    if (invo.recordset[0].F_TBName != 'T_GENMAIN') {
+                        house = main.recordset;
+                        console.log(house[0]);
+                        var isOIM = house[0].hasOwnProperty('F_OIMBLID');
+                        var isOOM = house[0].hasOwnProperty('F_OOMBLID');
+                        var isAIM = house[0].hasOwnProperty('F_AIMBLID');
+                        var isAOM = house[0].hasOwnProperty('F_AOMBLID');
+                        let freightMaster = await pool.request().query(`
+                        SELECT * FROM ${
+                            isOIM
+                                ? 'T_OIMMAIN'
+                                : isOOM
+                                ? 'T_OOMMAIN'
+                                : isAIM
+                                ? 'T_AIMMAIN'
+                                : isAOM
+                                ? 'T_AOMMAIN'
+                                : 'T_GENMAIN'
+                        } WHERE F_ID=${
+                            isOIM
+                                ? house[0].F_OIMBLID
+                                : isOOM
+                                ? house.F_OOMBLID
+                                : isAIM
+                                ? house.F_AIMBLID
+                                : isAOM
+                                ? house.F_AOMBLID
+                                : ''
+                        };
+                        `);
+
+                        master = freightMaster.recordset[0];
+                    } else {
+                        master = main.recordset[0];
+                    }
+
+                    // var isOIM = house.recordset[0].hasOwnProperty('F_OIMBLID');
+                    // var isOOM = house.recordset[0].hasOwnProperty('F_OOMBLID');
+                    // var isAIM = house.recordset[0].hasOwnProperty('F_AIMBLID');
+                    // var isAOM = house.recordset[0].hasOwnProperty('F_AOMBLID');
+                    // let master = await pool.request().query(`
+                    // SELECT * FROM ${
+                    //     isOIM
+                    //         ? 'T_OIMMAIN'
+                    //         : isOOM
+                    //         ? 'T_OOMMAIN'
+                    //         : isAIM
+                    //         ? 'T_AIMMAIN'
+                    //         : isAOM
+                    //         ? 'T_AOMMAIN'
+                    //         : 'T_GENMAIN'
+                    // } WHERE F_ID=${
+                    //     isOIM
+                    //         ? house.recordset[0].F_OIMBLID
+                    //         : isOOM
+                    //         ? house.recordset[0].F_OOMBLID
+                    //         : isAIM
+                    //         ? house.recordset[0].F_AIMBLID
+                    //         : isAOM
+                    //         ? house.recordset[0].F_AOMBLID
+                    //         : ''
+                    // };
+                    // `);
+                    // console.log(master);
 
                     res.status(200).send({
                         Invoice: invo.recordset[0],
                         Detail: invoDetail.recordset,
-                        House: house.recordset,
-                        Master: master.recordset[0],
+                        House: house,
+                        Master: master,
                     });
                 } else {
                     // Unautorized - Invoice cannot be acceesible to the customer
@@ -68,25 +115,6 @@ export default async function handler(req, res) {
             } else {
                 res.status(404).json({ error: true, status: 404, msg: 'Not Found' });
             }
-            // let house = await pool
-            //     .request()
-            //     .query(
-            //         `SELECT *, (select T_COMPANY.F_SName from T_COMPANY where T_COMPANY.F_ID=H.F_Customer) as CUSTOMER FROM ${houseTable} AS H WHERE ${blid}='${master.recordset[0].F_ID}';`
-            //     );
-            // if (isContainer) {
-            //     isContainer = await pool
-            //         .request()
-            //         .query(`select * from ${isContainer} WHERE ${blid}='${master.recordset[0].F_ID}'`);
-            // }
-            // if (house.recordset[0].F_Customer === token.customer) {
-            //     res.status(200).send({
-            //         master: master.recordset[0],
-            //         house: house.recordset || [],
-            //         container: isContainer.recordset || [],
-            //     });
-            // } else {
-            //     res.status(401).json({ error: true, status: 401, msg: 'Unauthroized' });
-            // }
         } catch (err) {
             console.log(err);
             res.status(404).json({ error: true, status: 404, msg: 'Not Found' });

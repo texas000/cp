@@ -10,6 +10,7 @@ const MENU_ITEMS = [
         display: true,
     },
     { key: 'ship-detail', label: 'Shipment', isTitle: false, icon: 'uil-truck', url: '/shipment', display: true },
+    { key: 'ship-invoice', label: 'Invoice', isTitle: false, icon: 'uil-bill', url: '/invoice', display: true },
     {
         key: 'components',
         label: 'Component',

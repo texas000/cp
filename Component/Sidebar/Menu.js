@@ -156,7 +156,10 @@ const AppMenu = ({ menuItems, location, token }) => {
                     return (
                         <React.Fragment key={idx}>
                             {item.isTitle ? (
-                                <li className="side-nav-title side-nav-item">{item.label}</li>
+                                // <li className="side-nav-title side-nav-item">{item.label}</li>
+                                <li className={classNames('side-nav-title side-nav-item', !item.display && 'd-none')}>
+                                    {item.label}
+                                </li>
                             ) : (
                                 <>
                                     {item.children ? (

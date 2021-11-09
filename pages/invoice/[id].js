@@ -34,8 +34,8 @@ export default function index({ token, query }) {
         <Layout token={token} title={query.id}>
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Invoice', path: '/apps/ecommerce/order/details' },
-                    { label: 'Invoice Details', path: '/apps/ecommerce/order/details', active: true },
+                    { label: 'Invoice', path: '/invoice' },
+                    { label: 'Invoice Details', path: '/invoice/details', active: true },
                 ]}
                 title={query.id}
             />

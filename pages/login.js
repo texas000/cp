@@ -36,7 +36,20 @@ export default function index() {
         <>
             <div className="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
                 <Head>
-                    <title>JWI TRACKING</title>
+                    <title>JWI TRACKING - ADDING VALUES TO YOUR CARGO</title>
+                    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+                    <meta charSet="utf-8" />
+                    <link rel="shortcut icon" href="/favicon.ico" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                    <meta name="theme-color" content="#000000" />
+                    <meta property="og:title" content="JWI TRACKING, ADDING VALUES TO YOUR CARGO!"></meta>
+                    <meta
+                        name="description"
+                        content="James Worldwide moves your cargo in the safest and fastest way possible, keeping you informed every step of the way and providing customized and innovative solutions."></meta>
+                    <meta
+                        property="og:description"
+                        content="James Worldwide moves your cargo in the safest and fastest way possible, keeping you informed every step of the way and providing customized and innovative solutions."></meta>
+                    <meta content="Coderthemes" name="author" />
                 </Head>
                 <Container>
                     <Row className="justify-content-center">

@@ -38,15 +38,7 @@ export default function index({ token }) {
     return (
         <Layout token={token} title="Dashboard">
             {!data || !invoice ? (
-                <div className="preloader">
-                    <div className="status">
-                        <div className="bouncing-loader">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
-                </div>
+                <></>
             ) : (
                 <Fragment>
                     <PageTitle

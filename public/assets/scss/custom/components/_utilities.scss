@@ -1,4 +1,11 @@
 // Utilities
 
-@import "utilities/background";
-@import "utilities/text";
+@import 'utilities/background';
+@import 'utilities/text';
+
+@media (min-width: 767px) {
+    .lg-padding {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}

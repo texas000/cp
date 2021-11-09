@@ -19,49 +19,47 @@ const optionGetter = (option) => {
         case 'OIM':
             return (
                 <a
-                    onClick={() => router.push('/shipment/' + option.F_RefNo)}
+                    // onClick={() => router.push('/shipment/' + option.F_RefNo)}
                     className={classNames('dropdown-item', 'notify-item', 'p-0')}>
                     <i className={classNames(option.Icon, 'font-16', 'me-1')}></i>
                     <span>
-                        {option.F_RefNo} ({option.F_CustRefNo})
+                        {option.F_RefNo} {option.F_CustRefNo && `(${option.F_CustRefNo})`}
                     </span>
                 </a>
             );
         case 'OEX':
             return (
-                <a href="/" className={classNames('dropdown-item', 'notify-item', 'p-0')}>
+                <a className={classNames('dropdown-item', 'notify-item', 'p-0')}>
                     <i className={classNames(option.Icon, 'font-16', 'me-1')}></i>
                     <span>
-                        {option.F_RefNo} ({option.F_ExPref})
+                        {option.F_RefNo} {option.F_ExPref && `(${option.F_ExPref})`}
                     </span>
                 </a>
             );
         case 'AIM':
             return (
-                <a href="/" className={classNames('dropdown-item', 'notify-item', 'p-0')}>
+                <a className={classNames('dropdown-item', 'notify-item', 'p-0')}>
                     <i className={classNames(option.Icon, 'font-16', 'me-1')}></i>
                     <span>
-                        {option.F_RefNo} ({option.F_CustRefNo})
+                        {option.F_RefNo} {option.F_CustRefNo && `(${option.F_CustRefNo})`}
                     </span>
                 </a>
             );
         case 'AEX':
             return (
-                <a href="/" className={classNames('dropdown-item', 'notify-item', 'p-0')}>
+                <a className={classNames('dropdown-item', 'notify-item', 'p-0')}>
                     <i className={classNames(option.Icon, 'font-16', 'me-1')}></i>
                     <span>
-                        {option.F_RefNo} ({option.F_ExpRefNo})
+                        {option.F_RefNo} {option.F_ExpRefNo && `(${option.F_ExpRefNo})`}
                     </span>
                 </a>
             );
         case 'INV':
             return (
-                <a
-                    onClick={() => router.push('/invoice/' + option.F_RefNo)}
-                    className={classNames('dropdown-item', 'notify-item', 'p-0')}>
+                <a className={classNames('dropdown-item', 'notify-item', 'p-0')}>
                     <i className={classNames(option.Icon, 'font-16', 'me-1')}></i>
                     <span>
-                        {option.F_RefNo} ({option.F_YourRef})
+                        {option.F_RefNo} {option.F_YourRef && `(${option.F_YourRef})`}
                     </span>
                 </a>
             );
@@ -140,10 +138,13 @@ const handleFormatOptionLabel = (option) => {
 };
 
 const TopbarSearch = (props) => {
-    const onClick = (e) => {
-        e.preventDefault();
-        console.log(e);
-        e.stopPropagation();
+    const handleChange = (e) => {
+        if (e.Type == 'INV') {
+            router.push('/invoice/' + e.F_RefNo);
+        } else {
+            router.push('/shipment/' + e.F_RefNo);
+        }
+        // e.stopPropagation();
     };
 
     return (
@@ -156,7 +157,8 @@ const TopbarSearch = (props) => {
                 formatOptionLabel={handleFormatOptionLabel}
                 isOptionDisabled={(option) => option.type === 'title'}
                 maxMenuHeight="350px"
-                handleClick={onClick}
+                // handleClick={onClick}
+                onChange={handleChange}
                 isSearchable
                 name="search-app"
                 className="app-search dropdown"

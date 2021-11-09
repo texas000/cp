@@ -190,8 +190,8 @@ const ShipmentDetails = ({ master, title, house, files }) => {
         <React.Fragment>
             <PageTitle
                 breadCrumbItems={[
-                    { label: 'Shipment', path: '/apps/ecommerce/order/details' },
-                    { label: 'Shipment Details', path: '/apps/ecommerce/order/details', active: true },
+                    { label: 'Shipment', path: '/shipment' },
+                    { label: 'Shipment Details', path: '/', active: true },
                 ]}
                 title={title || 'Shipment Details'}
             />
@@ -254,7 +254,7 @@ const ShipmentDetails = ({ master, title, house, files }) => {
                         </Col>
                     </Row>
 
-                    <Row className="px-4">
+                    <Row className="lg-padding">
                         <Col lg={8}>
                             <Card>
                                 <Card.Body>
@@ -278,7 +278,7 @@ const ShipmentDetails = ({ master, title, house, files }) => {
                         </Col>
                     </Row>
 
-                    <Row className="px-4">
+                    <Row className="lg-padding">
                         <Col lg={8}>
                             <ShipmentComment />
                         </Col>

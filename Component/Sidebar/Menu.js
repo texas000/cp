@@ -166,16 +166,21 @@ const AppMenu = ({ menuItems, location, token }) => {
                                         <MenuItemWithChildren
                                             item={item}
                                             toggleMenu={toggleMenu}
-                                            subMenuClassNames="side-nav-second-level"
+                                            subMenuClassNames={
+                                                token.admin < item.level ? 'd-none' : 'side-nav-second-level'
+                                            }
                                             activeMenuItems={activeMenuItems}
-                                            linkClassName="side-nav-link"
+                                            linkClassName={token.admin < item.level ? 'd-none' : 'side-nav-link'}
                                             token={token}
                                         />
                                     ) : (
                                         <MenuItem
                                             item={item}
                                             linkClassName="side-nav-link"
-                                            className={activeMenuItems.includes(item.key) ? 'menuitem-active' : ''}
+                                            className={
+                                                (activeMenuItems.includes(item.key) ? 'menuitem-active' : '',
+                                                token.admin < item.level && 'd-none')
+                                            }
                                         />
                                     )}
                                 </>

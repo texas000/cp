@@ -1,6 +1,26 @@
 const MENU_ITEMS = [
-    { key: 'accessible', label: 'Accessible', isTitle: true, display: true },
-    { key: 'dashboard', label: 'Dashboard', isTitle: false, icon: 'uil-home-alt', url: '/', display: true },
+    { key: 'accessible', label: 'MAIN MENU', isTitle: true, display: true, level: 0 },
+    { key: 'dashboard', label: 'Dashboard', isTitle: false, icon: 'uil-home-alt', url: '/', display: true, level: 0 },
+
+    {
+        key: 'ship-detail',
+        label: 'Shipment',
+        isTitle: false,
+        icon: 'uil-truck',
+        url: '/shipment',
+        display: true,
+        level: 0,
+    },
+    {
+        key: 'ship-invoice',
+        label: 'Invoice',
+        isTitle: false,
+        icon: 'uil-bill',
+        url: '/invoice',
+        display: true,
+        level: 0,
+    },
+    { key: 'customer-manage', label: 'CRM', isTitle: true, display: true, level: 9 },
     {
         key: 'apps-file-manager',
         label: 'File Manager',
@@ -8,20 +28,22 @@ const MENU_ITEMS = [
         icon: 'uil-folder-plus',
         url: '/apps/file',
         display: true,
+        level: 9,
     },
-    { key: 'ship-detail', label: 'Shipment', isTitle: false, icon: 'uil-truck', url: '/shipment', display: true },
-    { key: 'ship-invoice', label: 'Invoice', isTitle: false, icon: 'uil-bill', url: '/invoice', display: true },
+    { key: 'developer', label: 'Developer', isTitle: true, display: true, level: 99 },
     {
         key: 'components',
         label: 'Component',
         isTitle: false,
         icon: 'uil-traffic-barrier',
         display: true,
+        level: 99,
         children: [
             { key: 'icon-mdi', label: 'Material Design', url: '/icon/mdi', parentKey: 'components', display: true },
             { key: 'icon-unicons', label: 'Unicons', url: '/icon/unicons', parentKey: 'components', display: true },
         ],
     },
+
     { key: 'navigation', label: 'Navigation', isTitle: true },
     {
         key: 'dashboards',

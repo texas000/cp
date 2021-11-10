@@ -172,15 +172,18 @@ const Topbar = ({ hideLogo, navCssClasses, openLeftMenuCallBack, topbarDark, use
                         <li className="notification-list topbar-dropdown d-xl-none">
                             <SearchDropdown />
                         </li>
-                        <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
+                        {/* TEMPORARY COMMENT OUT */}
+                        {/* <li className="dropdown notification-list topbar-dropdown d-none d-lg-block">
                             <LanguageDropdown />
-                        </li>
-                        <li className="dropdown notification-list">
+                        </li> */}
+                        {/* TEMPORARY COMMENT OUT */}
+                        {/* <li className="dropdown notification-list">
                             <NotificationDropdown notifications={Notifications} />
-                        </li>
-                        <li className="dropdown notification-list d-none d-sm-inline-block">
+                        </li> */}
+                        {/* TEMPORARY COMMENT OUT */}
+                        {/* <li className="dropdown notification-list d-none d-sm-inline-block">
                             <AppsDropdown />
-                        </li>
+                        </li> */}
                         {/* <li className="notification-list">
                             <button
                                 className="nav-link dropdown-toggle end-bar-toggle arrow-none btn btn-link shadow-none"

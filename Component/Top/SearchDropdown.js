@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 
 import { Dropdown } from 'react-bootstrap';
+import TopbarSearch from './TopbarSearch';
 
 const SearchDropdown = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -25,9 +26,10 @@ const SearchDropdown = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="dropdown-menu-animated dropdown-lg p-0">
-                <form className="p-3">
+                <div className="p-3">
+                    {/* <TopbarSearch items={SearchResults} instanceId="topbarsearch" /> */}
                     <input type="text" className="form-control" placeholder="Search ..." />
-                </form>
+                </div>
             </Dropdown.Menu>
         </Dropdown>
     );

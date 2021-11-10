@@ -163,7 +163,7 @@ const ShipmentDetails = ({ master, title, house, files }) => {
             { id: 4, name: 'The Utility Shirt', quantity: 2, price: '$79', total: '$158' },
         ],
         shipping: {
-            provider: house[0].CUSTOMER,
+            provider: `${house[0].CUSTOMER} ${house[0].F_CustRefNo || house[0].F_ExPref || house[0].F_ExpRefNo}`,
             address_1: master.F_MBLNo || master.F_SMBLNo || master.F_MawbNo,
             address_2: master.CARRIER,
             vessel: master.F_Vessel || master.F_FLTno || master.F_FLTNo,
